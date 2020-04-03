@@ -91,48 +91,30 @@ $(() =>{
          *
          */
         room: {},
-
         init: function () {
             App.cacheElements();
-            App.showInitScreen();
+            App.showScreenTemplate(App.$templateIntroScreen);
+            App.doTextFit('.title');
             App.bindEvents();
             // Initialize the fastclick library
             FastClick.attach(document.body);
         },
-
-        /**
-         * Create references to on-screen elements used throughout the game.
-         */
-        cacheElements: function () {
-            App.$doc = $(document);
-            // Templates
-            App.$gameArea = $('#gameArea');
-            App.$templateIntroScreen = $('#intro-screen-template').html();
-            App.$templateCreateRoom = $('#create-room-template').html();
-        },
-
         /**
          * Create some click handlers for the various buttons that appear on-screen.
          */
         bindEvents: function () {
-            App.$doc.on('click', '#btnCreateRoom', App.showCreateRoomScreen);
+            App.$doc.on('click', '#btnCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoom));
             App.$doc.on('click', '#btnStartRoom', App.createNewRoom);
         },
+
         /**
-         * Show the initial Title Screen
+         * Show a regular screen template
          * (with Start and Join buttons)
          */
-        showInitScreen: function() {
-            App.$gameArea.html(App.$templateIntroScreen);
-            App.doTextFit('.title');
+        showScreenTemplate: function(template) {
+            App.$gameArea.html(template);
         },
-        /**
-         * Show the create room screen
-         * (with Start and Join buttons)
-         */
-        showCreateRoomScreen: async function() {
-            App.$gameArea.html(App.$templateCreateRoom);
-        },
+        //Business
         /**
          * create a new room
          * (with Start and Join buttons)
@@ -151,6 +133,18 @@ $(() =>{
         },
 
         // UTILITY
+        /**
+         * Create references to on-screen elements used throughout the game.
+         */
+        cacheElements: function () {
+            App.$doc = $(document);
+            // Templates
+            App.$gameArea = $('#gameArea');
+            App.$templateIntroScreen = $('#intro-screen-template').html();
+            App.$templateCreateRoom = $('#create-room-template').html();
+            App.$templateLobby = $('#lobby-template').html();
+
+        },
         /**
          * Make the text inside the given element as big as possible
          * See: https://github.com/STRML/textFit

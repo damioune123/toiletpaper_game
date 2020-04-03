@@ -1,79 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8"/>
+  <head>
+    <meta charset="utf-8"/>
+    <!-- Ensure that everything scales appropriately on a mobile device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <!-- Let's borrow a cool looking Font from Google -->
+    <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+  </head>
 
-  <!-- Ensure that everything scales appropriately on a mobile device -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-
-  <!-- Let's borrow a cool looking Font from Google -->
-  <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
-
-</head>
-
-<body>
-
-
-<div id="gameArea">
-  <!-- This is where the templates defined below will be used -->
-</div>
-
-<!-- Main Title Screen that appears when the page loads for the first time -->
-<script id="intro-screen-template" type="text/template">
-
-  <div class="titleWrapper">
-
-    <div class="title">
-      TOILET PAPER GAME
+  <body>
+    <div id="gameArea">
+      <!-- This is where the templates defined below will be used -->
     </div>
 
-    <div class="buttons">
+    <!-- Main Title Screen that appears when the page loads for the first time -->
+    <script id="intro-screen-template" type="text/template">
+      <div class="titleWrapper">
+        <div class="title">
+          TOILET PAPER GAME
+        </div>
+        <div class="buttons">
+          <button id="btnCreateRoom" class="btn left">CREATE ROOM</button>
+          <button id="btnJoinRoom" class="btn right">JOIN ROOM</button>
+          <div style="clear:both"></div>
+        </div>
+      </div>
+    </script>
 
-      <button id="btnCreateRoom" class="btn left">CREATE ROOM</button>
-      <button id="btnJoinRoom" class="btn right">JOIN ROOM</button>
-      <div style="clear:both"></div>
-    </div>
+    <!-- This screen appears when a player clicks "Create" on the Title Screen -->
+    <script id="create-room-template" type="text/template">
+      <div class="createRoomWrapper">
+        <div class="info">
+          <label for="inputPlayerName">Your Name:</label>
+          <input id="inputPlayerName" type="text" />
+        </div>
+        <div class="info">
+          <label for="inputRoomName">Room name:</label>
+          <input id="inputRoomName" type="text"/>
+        </div>
+        <div class="info buttons">
+          <button id="btnStartRoom" class="btn">Create</button>
+          <div id="playerWaitingMessage"></div>
+        </div>
+      </div>
+    </script>
 
-  </div>
+    <script src="bundle.min.js"></script>
 
-</script>
-
-<!-- This screen appears when a player clicks "Create" on the Title Screen -->
-<script id="create-room-template" type="text/template">
-  <div class="createRoomWrapper">
-    <div class="info">
-      <label for="inputPlayerName">Your Name:</label>
-      <input id="inputPlayerName" type="text" />
-    </div>
-
-    <div class="info">
-      <label for="inputRoomName">Room name:</label>
-      <input id="inputRoomName" type="text"/>
-    </div>
-
-    <div class="info buttons">
-      <button id="btnStartRoom" class="btn">Create</button>
-      <div id="playerWaitingMessage"></div>
-    </div>
-  </div>
-</script>
-
-<!-- This is the 'Host' screen. It displays the word for each player to match -->
-<script id="host-game-template" type="text/template">
-  <div id="wordArea">
-    <div id="hostWord">5</div>
-  </div>
-  <div id="playerScores">
-    <div id="player1Score" class="playerScore">
-      <span class="score">0</span><span class="playerName">Player 1</span>
-    </div>
-    <div id="player2Score" class="playerScore">
-      <span class="playerName">Player 2</span><span class="score">0</span>
-    </div>
-  </div>
-</script>
-<!-- app.js is where all the client-side Anagrammatix game logic -->
-<script src="bundle.min.js"></script>
-
-</body>
+  </body>
 </html>
