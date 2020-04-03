@@ -1,8 +1,11 @@
-// Import the vendor modules
+//vendor
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+
+//own
+const lockDownRaceSocketHandler = require('./socket/lockdown_race_socket_handler');
 
 // Create a new instance of Express and socket io
 const app = express();
@@ -23,8 +26,9 @@ io.set('log level', 1);
 
 //Connect the websocket
 io.on('connection', (socket)=>{
-    //TODO
-    console.log('a user connected');
+    console.log('a user has connected');
+    lockDownRaceSocketHandler.handleSocket(io, socket);
+
 });
 
 // Create a Node.js based http server on port 8080

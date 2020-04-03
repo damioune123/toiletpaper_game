@@ -35,7 +35,6 @@ exports.add = async (req, res, next) => {
     };
     const room = {
         roomId,
-        currentPlayerId,
         roomName: value.roomName,
         roomLanguage: value.language,
         gameServerSocketId: null,
@@ -47,5 +46,6 @@ exports.add = async (req, res, next) => {
     };
     room.roomState.players[currentPlayerId] = currentPlayer;
     rooms.addRoom(roomId, room);
-    return res.status(200).json(rooms.getRooms());
+    const response = Object.assign({}, {currentPlayerId});
+    return res.status(200).json(response);
 };
