@@ -2,7 +2,10 @@ const express = require('express');
 const router = new express.Router();
 
 const routesController = require('../controllers/rooms');
-// /rooms [GET]
-router.route('/').get(routesController.getAll);
+// /rooms [GET POST]
+router.route('/')
+    .get(routesController.getAll)
+    .post(routesController.add);
+
 
 module.exports = router;

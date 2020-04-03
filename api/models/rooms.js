@@ -1,13 +1,21 @@
-const rooms = [];
+const rooms = {};
 
-const addRoom = (room) =>{
-  rooms.push(rooms);
+const addRoom = (roomId, room) =>{
+  rooms[roomId] = room
 };
 
 const getRooms = ()=>{
     return rooms;
 };
+const isRoomNameTaken = (roomName)=>{
+    const roomsPerRoomName = Object.keys(rooms).reduce((dic, key)=>{
+        dic[rooms[key].roomName] = rooms[key];
+        return dic;
+    },{});
+    return roomName in roomsPerRoomName;
+};
 module.exports = {
     addRoom,
-    getRooms
+    getRooms,
+    isRoomNameTaken,
 };
