@@ -43,6 +43,8 @@ $(() =>{
             if(newPlayer.userId === App.currentPlayer.userId){
                 App.currentPlayer = newPlayer;
                 console.log(`Client user - current user has successfully joined the room - ${App.room.roomName}`);
+                App.showLobbyScreen();
+
             }
             else{
                 console.log(`Client User - A new player has connected to the room - ${newPlayer.userName}`)
@@ -55,6 +57,10 @@ $(() =>{
         roomUpdated : ({room}) =>{
             console.log('Client User - room local copy updated');
             App.room = room;
+            if(App.currentPageId === App.$templateLobbyId){
+                App.loadPlayersOnLobby();
+            }
+
         },
         /**
          * An error has occurred.
@@ -91,29 +97,61 @@ $(() =>{
          *
          */
         room: {},
+        currentPageId: null,
         init: function () {
             App.cacheElements();
-            App.showScreenTemplate(App.$templateIntroScreen);
-            App.doTextFit('.title');
+            App.showInitScreenTemplate();
             App.bindEvents();
             // Initialize the fastclick library
             FastClick.attach(document.body);
         },
         /**
+         * Create references to on-screen elements used throughout the game.
+         */
+        cacheElements: function () {
+            App.$doc = $(document);
+            // Templates
+            App.$gameArea = $('#gameArea');
+            App.$templateIntroScreenId = '#intro-screen-template';
+            App.$templateCreateRoomId = '#create-room-template';
+            App.$templateLobbyId = '#lobby-template';
+        },
+        /**
          * Create some click handlers for the various buttons that appear on-screen.
          */
         bindEvents: function () {
-            App.$doc.on('click', '#btnCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoom));
+            App.$doc.on('click', '#btnCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoomId));
             App.$doc.on('click', '#btnStartRoom', App.createNewRoom);
         },
 
+        // Show screen function
+        /**
+         * Show the initial Title Screen
+         * (with Start and Join buttons)
+         */
+        showInitScreenTemplate: function() {
+            App.showScreenTemplate(App.$templateIntroScreenId);
+            App.doTextFit('.title');
+        },
         /**
          * Show a regular screen template
          * (with Start and Join buttons)
          */
-        showScreenTemplate: function(template) {
-            App.$gameArea.html(template);
+        showLobbyScreen: function() {
+            App.showScreenTemplate(App.$templateLobbyId);
+            App.loadPlayersOnLobby();
+
         },
+        loadPlayersOnLobby: function (){
+            const ul =  $('#lobbyPlayersList');
+            ul.empty();
+            Object.keys(App.room.roomState.players).forEach((key)=>{
+                const player = App.room.roomState.players[key];
+                const playerInfo = 'Username : '+  player.userName + ' | Connected '+player.isConnected;
+                ul.append('<li>'+playerInfo+'</li>');
+            })
+        },
+
         //Business
         /**
          * create a new room
@@ -134,17 +172,14 @@ $(() =>{
 
         // UTILITY
         /**
-         * Create references to on-screen elements used throughout the game.
+         * Show a regular screen template
+         * (with Start and Join buttons)
          */
-        cacheElements: function () {
-            App.$doc = $(document);
-            // Templates
-            App.$gameArea = $('#gameArea');
-            App.$templateIntroScreen = $('#intro-screen-template').html();
-            App.$templateCreateRoom = $('#create-room-template').html();
-            App.$templateLobby = $('#lobby-template').html();
-
+        showScreenTemplate: function(templateId) {
+            App.$gameArea.html($(templateId).html());
+            App.currentPageId = templateId;
         },
+
         /**
          * Make the text inside the given element as big as possible
          * See: https://github.com/STRML/textFit
