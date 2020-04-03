@@ -46,6 +46,6 @@ exports.add = async (req, res, next) => {
     };
     room.roomState.players[currentPlayerId] = currentPlayer;
     rooms.addRoom(roomId, room);
-    const response = Object.assign({}, {currentPlayerId});
+    const response = Object.assign({}, room, {currentPlayerId});
     return res.status(200).json(response);
 };

@@ -1,4 +1,3 @@
-const uuid = require('../utils/uuid');
 const rooms = require('../models/rooms');
 const logger = require('../utils/logger');
 let io;
@@ -50,11 +49,12 @@ function joinRoom({roomId, playerId, isHost = false}) {
         logger.log('error', msg);
         this.emit('error', msg);
     }
-    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.emit('joinRoom', {roomState: room, success: true});
-
     // Join the Room and wait for the players
     this.join(room.roomId);
-    io.to(room.roomId).emit('joinRoom', {roomState: room, newPlayer: room.players[playerId]})
-};
+    if(!isHost){
+        io.to(room.roomId).emit('playerJoinedRoom', {newPlayer: room.players[playerId]})
+    }
+    io.to(room.roomId).emit('newRoomState', {roomState: room})
+
+}
 
