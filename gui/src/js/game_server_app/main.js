@@ -83,12 +83,15 @@ const App = {
     try{
       response = await axios.post(`${App.API_URL}/rooms`, roomData);
     }catch(error){
-      console.error('Error while creating the room', error);
+      console.log('Error while creating the room', error);
+      alert(error.response.data);
       return false;
     }
     App.room = response.data;
     IO.init();
     return response.data;
+
+
   },
  //ADD HERE ALL FUNCTION THAT WILL change the app state
 
