@@ -61,9 +61,21 @@
 <!-- This is the lobby screen -->
 <script id="lobby-template" type="text/template">
   <div class="lobbyWrapper">
+    <h1 id="lobbyAmountTotalPlayers"></h1>
+    <h1 id="lobbyAmountConnectedPlayers"></h1>
     <ul id="lobbyPlayersList">
 
     </ul>
+    <button id="btnStartGame" class="btn">Start Game</button>
+  </div>
+</script>
+<!-- This is the screen where the game actually happens -->
+
+<script id="game-template" type="text/template">
+  <div class="gameWrapper">
+    <div class="title">
+      THIS IS THE GAME PAGE
+    </div>
   </div>
 </script>
 <script src="bundle.min.js"></script>

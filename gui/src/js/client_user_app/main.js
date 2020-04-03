@@ -58,9 +58,8 @@ $(() =>{
             console.log('Client User - room local copy updated');
             App.room = room;
             if(App.currentPageId === App.$templateLobbyId){
-                App.loadPlayersOnLobby();
+                App.showLobbyScreen();
             }
-
         },
         /**
          * An error has occurred.
@@ -98,7 +97,7 @@ $(() =>{
          */
         room: {},
         currentPageId: null,
-        init: function () {
+        init: () => {
             App.cacheElements();
             App.showInitScreenTemplate();
             App.bindEvents();
@@ -108,20 +107,22 @@ $(() =>{
         /**
          * Create references to on-screen elements used throughout the game.
          */
-        cacheElements: function () {
+        cacheElements: () => {
             App.$doc = $(document);
             // Templates
             App.$gameArea = $('#gameArea');
             App.$templateIntroScreenId = '#intro-screen-template';
             App.$templateCreateRoomId = '#create-room-template';
             App.$templateLobbyId = '#lobby-template';
+            App.$gameTemplateId = '#game-template';
         },
         /**
          * Create some click handlers for the various buttons that appear on-screen.
          */
-        bindEvents: function () {
+        bindEvents: () => {
             App.$doc.on('click', '#btnCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoomId));
             App.$doc.on('click', '#btnStartRoom', App.createNewRoom);
+            App.$doc.on('click', '#btnStartGame', App.launchGame);
         },
 
         // Show screen function
@@ -129,7 +130,7 @@ $(() =>{
          * Show the initial Title Screen
          * (with Start and Join buttons)
          */
-        showInitScreenTemplate: function() {
+        showInitScreenTemplate: () => {
             App.showScreenTemplate(App.$templateIntroScreenId);
             App.doTextFit('.title');
         },
@@ -137,27 +138,33 @@ $(() =>{
          * Show a regular screen template
          * (with Start and Join buttons)
          */
-        showLobbyScreen: function() {
-            App.showScreenTemplate(App.$templateLobbyId);
-            App.loadPlayersOnLobby();
+        showLobbyScreen: () => {
+            const loadPlayersOnLobby = ()=>{
+                $('#lobbyAmountTotalPlayers').empty();
+                $('#lobbyAmountTotalPlayers').append(`${Object.keys(App.room.roomState.players).length} players`);
+                const ul =  $('#lobbyPlayersList');
+                ul.empty();
+                let connectedPlayersAmount = 0;
+                Object.keys(App.room.roomState.players).forEach((key)=>{
+                    const player = App.room.roomState.players[key];
+                    if(player.isConnected) connectedPlayersAmount ++;
+                    const playerInfo = `Username : ${player.userName} | Connected ${player.isConnected}`;
+                    ul.append(`<li>${playerInfo}</li>`);
+                });
+                $('#lobbyAmountConnectedPlayers').empty();
+                $('#lobbyAmountConnectedPlayers').append(`${connectedPlayersAmount} connected players`);
+            };
 
+            App.showScreenTemplate(App.$templateLobbyId);
+            loadPlayersOnLobby();
         },
-        loadPlayersOnLobby: function (){
-            const ul =  $('#lobbyPlayersList');
-            ul.empty();
-            Object.keys(App.room.roomState.players).forEach((key)=>{
-                const player = App.room.roomState.players[key];
-                const playerInfo = 'Username : '+  player.userName + ' | Connected '+player.isConnected;
-                ul.append('<li>'+playerInfo+'</li>');
-            })
-        },
+
 
         //Business
         /**
          * create a new room
-         * (with Start and Join buttons)
          */
-        createNewRoom: async function() {
+        createNewRoom: async () => {
             const data = {
                 roomName : $('#inputRoomName').val(),
                 userName : $('#inputPlayerName').val()
@@ -169,13 +176,22 @@ $(() =>{
                 IO.init();
             }
         },
+        /**
+         * Launch Game
+         *
+         */
+        launchGame: () => {
+            //TODO SOCKET LOGIC TO INIT GAME on the game server app
+            App.showScreenTemplate(App.$gameTemplateId);
+            App.doTextFit('.title');
+
+        },
 
         // UTILITY
         /**
          * Show a regular screen template
-         * (with Start and Join buttons)
          */
-        showScreenTemplate: function(templateId) {
+        showScreenTemplate: (templateId) => {
             App.$gameArea.html($(templateId).html());
             App.currentPageId = templateId;
         },
@@ -186,7 +202,7 @@ $(() =>{
          *
          * @param el The parent element of some text
          */
-        doTextFit : function(el) {
+        doTextFit : (el) => {
             textFit(
                 $(el)[0],
                 {

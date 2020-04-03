@@ -83,8 +83,13 @@ const App = {
     try{
       response = await axios.post(`${App.API_URL}/rooms`, roomData);
     }catch(error){
-      console.log('Error while creating the room', error);
-      alert(error.response.data);
+      console.log('Error while creating the room', error.response.data);
+      if(error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
+        alert(error.response.data.details[0].message);
+      }
+      else{
+        alert(JSON.stringify(error.response.data));
+      }
       return false;
     }
     App.room = response.data;
