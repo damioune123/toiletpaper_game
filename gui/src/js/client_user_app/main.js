@@ -22,32 +22,39 @@ $(() =>{
          * by the Socket.IO server, then run the appropriate function.
          */
         bindEvents : () =>{
-            IO.socket.on('connected', IO.onConnected );
-            IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
-            IO.socket.on('newRoomState', IO.playerJoinedRoom );
-            IO.socket.on('error', IO.error );
+            IO.socket.on('connected', IO.onConnected);
+            IO.socket.on('new:player', IO.playerJoinedRoom);
+            IO.socket.on('update:room', IO.roomUpdated);
+            IO.socket.on('error', IO.error);
         },
 
         /**
          * The client user app is successfully connected!
          */
         onConnected : () => {
-            console.log('Client User - Successfully connected to the room');
+            console.log('Client User - Successfully connected to the Websocket, connecting to the room ...');
+            IO.socket.emit('join:room', {roomId: App.room.roomId, playerId: App.currentPlayer.userId, isHost: false});
         },
         /**
          * A player has successfully joined the game.
          * @param data {{newPlayer: object}}
          */
         playerJoinedRoom : ({newPlayer}) =>{
-            console.log('Client User - A new player has connected to the room ', newPlayer)
+            if(newPlayer.userId === App.currentPlayer.userId){
+                App.currentPlayer = newPlayer;
+                console.log(`Client user - current user has successfully joined the room - ${App.room.roomName}`);
+            }
+            else{
+                console.log(`Client User - A new player has connected to the room - ${newPlayer.userName}`)
+            }
         },
         /**
-         * The room state has been updated, refreshing local version
-         * @param data {{roomState: object}}
+         * The room e has been updated, refreshing local version
+         * @param data {{room: object}}
          */
-        newRoomState : ({roomState}) =>{
-            console.log('Client User - New room state', roomState);
-            App.roomState= roomState;
+        roomUpdated : ({room}) =>{
+            console.log('Client User - room local copy updated');
+            App.room = room;
         },
         /**
          * An error has occurred.
@@ -74,13 +81,18 @@ $(() =>{
         gameState: {},
 
         /**
-         * This is the room state copy of the whole app (modified server-side only)
+         * This is a local copy of the currentPlayer
          *
          */
-        roomState: {},
+        currentPlayer: {},
+
+        /**
+         * This is the room copy  (modified server-side only)
+         *
+         */
+        room: {},
 
         init: function () {
-            console.log('Client User - init');
             App.cacheElements();
             App.showInitScreen();
             App.bindEvents();
@@ -130,7 +142,12 @@ $(() =>{
                 roomName : $('#inputRoomName').val(),
                 userName : $('#inputPlayerName').val()
             };
-            await gameServerApp.createNewRoom(data);
+            const room = await gameServerApp.createNewRoom(data);
+            if(room){
+                App.room = room;
+                App.currentPlayer = room.roomState.players[room.currentPlayerId];
+                IO.init();
+            }
         },
 
         // UTILITY
@@ -153,7 +170,6 @@ $(() =>{
             );
         }
     };
-    IO.init();
     App.init();
 });
 

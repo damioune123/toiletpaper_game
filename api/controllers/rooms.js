@@ -16,7 +16,7 @@ exports.add = async (req, res, next) => {
     try{
         value = await Joi.validate(req.body, schema);
     }catch(error){
-        logger.log('error', 'An error occured while creating a room during joi validation',  {error, value: req.body});
+        logger.log('error', 'An error occurred while creating a room during joi validation',  {error, value: req.body});
         return res.status(400).json(error);
     }
     if(rooms.isRoomNameTaken(value.roomName)){

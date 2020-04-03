@@ -12,9 +12,9 @@ let gameSocket;
 exports.handleSocket = function(sio, socket){
     io = sio;
     gameSocket = socket;
-    gameSocket.emit('connected', { message: "You are connected!", success: true});
+    gameSocket.emit('connected', { message: "You are connected!"});
     // Global Events
-    gameSocket.on('joinRoom', joinRoom);
+    gameSocket.on('join:room', joinRoom);
 
     // Host Events
 
@@ -37,24 +37,26 @@ function joinRoom({roomId, playerId, isHost = false}) {
         const msg = 'the room id does not exist';
         logger.log('error', msg);
         this.emit('error', msg);
+        return;
     }
     const room = rooms.getRoom(roomId);
     if(isHost) room.gameServerSocketId = this.id;
-    else if (rooms.players[playerId]){
-        room.players[playerId].isConnected = true;
-        room.players[playerId].socketId = this.id;
+    else if (room.roomState.players[playerId]){
+        room.roomState.players[playerId].isConnected = true;
+        room.roomState.players[playerId].socketId = this.id;
     }
     else{
         const msg = 'The player does not exist in the room';
         logger.log('error', msg);
         this.emit('error', msg);
+        return;
     }
     // Join the Room and wait for the players
     this.join(room.roomId);
     if(!isHost){
-        io.to(room.roomId).emit('playerJoinedRoom', {newPlayer: room.players[playerId]})
+        io.to(room.roomId).emit('new:player', {newPlayer: room.roomState.players[playerId]})
     }
-    io.to(room.roomId).emit('newRoomState', {roomState: room})
+    io.to(room.roomId).emit('update:room', {room})
 
 }
 

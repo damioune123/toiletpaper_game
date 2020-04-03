@@ -20,8 +20,8 @@ const IO = {
    */
   bindEvents : () =>{
     IO.socket.on('connected', IO.onConnected );
-    IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
-    IO.socket.on('newRoomState', IO.playerJoinedRoom );
+    IO.socket.on('new:player', IO.playerJoinedRoom );
+    IO.socket.on('update:room', IO.roomUpdated );
     IO.socket.on('error', IO.error );
   },
 
@@ -29,22 +29,24 @@ const IO = {
    * The game server app is successfully connected!
    */
   onConnected : () => {
-    console.log('Game Server - Successfully connected to the room');
+    console.log('Game Server - Successfully connected to the websocket, connecting to the room ...');
+    IO.socket.emit('join:room', {roomId: App.room.roomId, isHost: true});
+
   },
   /**
    * A player has successfully joined the game.
    * @param data {{newPlayer: object}}
    */
   playerJoinedRoom : ({newPlayer}) =>{
-    console.log('Game Server - A new player has connected to the room ', newPlayer)
+    console.log(`Game Server - A new player has connected to the room  - ${newPlayer.userName}`)
   },
   /**
-   * The room state has been updated, refreshing local version
-   * @param data {{roomState: object}}
+   * The room e has been updated, refreshing local version
+   * @param data {{room: object}}
    */
-  newRoomState : ({roomState}) =>{
-    console.log('Game Server - New room state', roomState);
-    App.roomState= roomState;
+  roomUpdated : ({room}) =>{
+    console.log('Client User - room local copy updated');
+    App.room = room;
   },
   /**
    * An error has occurred.
@@ -67,25 +69,26 @@ const App = {
   gameState: {},
 
   /**
-   * This is the room state of the whole app (modified server-side only)
+   * This is the room copy (modified server-side only)
    *
    */
-  roomState: {},
+  room: {},
   /**
    * This will create a room in the backend and then in init the websocket if the room was successfully created
-   *
    * @param roomData
+   * @returns Either the room object or false if an error occurred
    */
   createNewRoom: async (roomData)=> {
     let response;
     try{
       response = await axios.post(`${App.API_URL}/rooms`, roomData);
-      console.log('response')
     }catch(error){
-      console.error('Error while creating the room', error)
+      console.error('Error while creating the room', error);
+      return false;
     }
-    App.roomState = response;
+    App.room = response.data;
     IO.init();
+    return response.data;
   },
  //ADD HERE ALL FUNCTION THAT WILL change the app state
 
