@@ -1,10 +1,14 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 module.exports =(env, argv) => {
     const isDevelopment = argv.mode === 'development';
     /* Webpack config */
     return ({
         mode: argv.mode,
+        node: {
+            fs: "empty"
+        },
         devtool: isDevelopment ? 'inline-source-map': 'source-map',
         entry: './src/js/app.js',
         output: {
@@ -55,7 +59,8 @@ module.exports =(env, argv) => {
         plugins: [
             new CopyWebpackPlugin([{
                 from: './*.html'
-            }])
+            }]),
+            new Dotenv()
         ]
     })
 };

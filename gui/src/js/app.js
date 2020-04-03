@@ -7,7 +7,6 @@ require('../css/styles.css');
 //vendor
 window.$ = require('jquery');
 window.textFit = require('textfit');
-window.io = require('socket.io-client');
 window.FastClick = require('fastclick');
 
 //own

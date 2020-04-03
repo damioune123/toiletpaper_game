@@ -8,6 +8,10 @@
     "start:dev": "webpack-dev-server --mode development --hot"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
+    "axios": "^0.19.2",
+    "dotenv-webpack": "^1.7.0",
     "fastclick": "^1.0.6",
     "jquery": "^3.2.1",
     "lightbox2": "^2.9.0",
