@@ -194,6 +194,8 @@ $(() =>{
             };
 
             App.showScreenTemplate(App.$templateLobbyId);
+            $('#lobbyCurrentUser').empty();
+            $('#lobbyCurrentUser').append(`Username : ${App.currentPlayer.userName}`);
             loadPlayersOnLobby();
         },
 
