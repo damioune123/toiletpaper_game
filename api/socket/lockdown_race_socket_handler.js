@@ -33,13 +33,13 @@ exports.handleSocket = function(sio, socket){
  * @params room, the room to join
  */
 function joinRoom({roomId, playerId, isHost = false}) {
-    if(!rooms.getRoom(roomId)){
+    if(!rooms.getRoomWithId(roomId)){
         const msg = 'the room id does not exist';
         logger.log('error', msg);
         this.emit('error', msg);
         return;
     }
-    const room = rooms.getRoom(roomId);
+    const room = rooms.getRoomWithId(roomId);
     if(isHost) room.gameServerSocketId = this.id;
     else if (room.roomState.players[playerId]){
         room.roomState.players[playerId].isConnected = true;

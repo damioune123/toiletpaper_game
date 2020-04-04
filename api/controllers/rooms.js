@@ -47,5 +47,40 @@ exports.add = async (req, res, next) => {
     room.roomState.players[currentPlayerId] = currentPlayer;
     rooms.addRoom(roomId, room);
     const response = Object.assign({}, room, {currentPlayerId});
+    return res.status(201).json(response);
+};
+
+exports.join = async (req, res, next) => {
+    const schema = Joi.object().keys({
+        userName: Joi.string().alphanum().min(3).max(8).required(),
+        roomName:Joi.string().alphanum().min(3).max(15).required(),
+    });
+    let value;
+    try{
+        value = await Joi.validate(req.query, schema);
+    }catch(error){
+        logger.log('error', 'An error occurred while joining a room during joi validation',  {error, value: req.query});
+        return res.status(400).json(error);
+    }
+    if(!rooms.isRoomNameTaken(value.roomName)){
+        logger.log('info', 'This room name does not exist');
+        return res.status(400).json('Room name does not exist');
+    }
+
+    const room = rooms.getRoomWithName(value.roomName);
+    if(rooms.getPlayerInRoomWithHisName(room, value.userName)){
+        logger.log('info', 'A player with a same name has been found');
+        return res.status(400).json('Username already taken');
+    }
+    const currentPlayer = {
+        userId: uuid.generate(),
+        socketId: null,
+        userName: value.userName,
+        isConnected: false,
+        isHost: false,
+        joinTime: (new Date()).toISOString()
+    };
+    room.roomState.players[currentPlayer.userId] = currentPlayer;
+    const response = Object.assign({}, room, {currentPlayerId: currentPlayer.userId});
     return res.status(200).json(response);
 };
