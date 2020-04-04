@@ -30,6 +30,7 @@ $(() =>{
          */
         bindEvents : () =>{
             IO.socket.on('connected', IO.onConnected);
+            IO.socket.on('disconnect', IO.disconnectedServer);
             IO.socket.on('new:player', IO.playerJoinedRoom);
             IO.socket.on('update:room', IO.roomUpdated);
             IO.socket.on('disconnected:player', IO.disconnectedPlayer);
@@ -98,6 +99,14 @@ $(() =>{
          */
         disconnectedPlayer: ({leftPlayer}) =>{
             console.log(`Client User - a player has disconnected in the room : ${leftPlayer.userName}`);
+        },
+        /**
+         * The game server left the game
+         */
+        disconnectedServer: () =>{
+            console.log(`Client User - The server has disconnected`);
+            App.reset();
+            alert('The server has disconnected - redirecting to home page');
         },
         /**
          * The game server left the game
