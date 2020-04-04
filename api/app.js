@@ -36,11 +36,10 @@ io.on('connection', (socket)=>{
 });
 
 
-
-
+const port = process.env.PORT || 8080;
 // Create a Node.js based http server on port 8080
-http.listen(8080, ()=>{
-    console.log('listening on *:8080');
+http.listen(port,()=>{
+    console.log('listening on *:'+port);
 });
 
 
