@@ -1,4 +1,4 @@
-### Lockdown race
+### Toiletpaper game
 
 ## Installation for development
 
