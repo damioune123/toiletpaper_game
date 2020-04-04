@@ -84,6 +84,7 @@ $(() =>{
         disconnectedHost: () =>{
             console.log(`Client User - The game server (host) left the game`);
             App.reset();
+            alert('The host has left the game, you have been redirected');
         },
         /**
          * An error has occurred.
