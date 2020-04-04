@@ -1,0 +1,264 @@
+<!doctype html>
+
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+
+    <title>anim screen</title>
+    <meta name="description" content="anim screen">
+    <meta name="author" content="Bastien">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background-color: lightblue;
+            height: 90vh;
+            margin: 0px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 2rem;
+            /* align-items: flex-start; */
+            /*  flex-start*/
+
+        }
+
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-style: oblique 5deg;
+            ;
+            color: white;
+            font-size: 6.5rem;
+            letter-spacing: -0.2rem;
+            margin: 0;
+        }
+
+        h2 {
+            font-family: 'Roboto Slab', serif;
+            color: #000000bd;
+            font-size: 2.6rem;
+            margin-bottom: 0;
+            margin-top: 3rem;
+        }
+
+        h3 {
+            font-family: 'Roboto Slab', serif;
+            color: #000000bd;
+            font-size: 2.1rem;
+            margin-bottom: 0;
+            margin-top: 3rem;
+        }
+
+        p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+        }
+
+
+        .flex-container-col {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .flex-container-row {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            /* justify-content: space-between; */
+        }
+
+        .round-main {
+            background-color: pink;
+            width: 90%;
+            flex-basis: 70%;
+            border: 1rem solid black;
+            border-radius: 3rem;
+        }
+        .round-header, .round-footer{
+            /* flex-shrink: 5; */
+            /* flex: 1 0 1; */
+        }
+        .round-player-name{
+            width: 25%;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .flex-item-line{
+            width: 25%;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+
+        .anim-main {
+            background-color: pink;
+            width: 60%;
+            /* height: 60%; */
+        }
+        .input-self, .input-other{
+            height: 2.5rem;
+            width: 60%;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            
+        }
+
+        .bg-green{
+            background-color:#30c767;
+            color: white;
+        }
+        .bg-red{
+            background-color:#ff6d63;
+            color: white;
+        }
+        .input-label{
+            font-size: 0.8rem;
+            text-transform: lowercase;
+            position: absolute;
+            margin-left: 1.5%;
+            color: grey;
+        }
+        .btn-input{
+            height: 3rem;
+            vertical-align: middle;
+            border: none;
+            width: 3rem;
+            margin-left: 0.4rem;
+            color: white;
+            padding: 0;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border: 0.1rem solid white;
+            border-radius: 0.3rem;
+        }
+        .btn-disabled{
+            opacity: 0.5;
+        }
+        .round-player-name{
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            color: black;
+            font-size: 3.5rem;
+            letter-spacing: -0.2rem;
+            margin: 0;
+        }
+
+
+       
+
+    </style>
+</head>
+
+<body>
+    <div class="flex-container-col">
+        <div class="round-header">
+            <h1>Animal</h1>
+        </div>
+        <div class="round-main flex-container-col">
+
+            <div class="round-player-line flex-container-row">
+                <div class="round-player-name flex-item-line">dams</div>
+                <div class="round-player-input1 flex-item-line"> <label class="input-label" for="input1">Animal</label> <input type="text" class="input-self bg-green" name="input1-player1"><button class="btn-input bg-green"> <img style="width: 2.4rem;" src="img/valid.png" alt="" srcset=""></button></div>
+                <div class="round-player-input2 flex-item-line"> <label class="input-label" for="input2">Animal</label> <input disabled type="text" class="input-other bg-red" name="input1-player1"><button class="btn-input bg-red">OK</button></div>
+                <div class="round-player-time flex-item-line">time</div>
+            </div>
+            <hr style="border:0.1rem solid grey; width: 100%;">
+            <div class="round-player-line flex-container-row">
+                <div class="round-player-name flex-item-line">BAST</div>
+                <div class="round-player-input1 flex-item-line"> <label class="input-label" for="input1">Animal</label> <input disabled type="text" class="input-self bg-green" name="input1-player1"><button class="btn-input bg-green btn-disabled">OK</button></div>
+                <div class="round-player-input2 flex-item-line"> <label class="input-label" for="input2">Animal</label> <input type="text" class="input-other bg-red" name="input1-player1"><button class="btn-input bg-red"><img style="width: 2.4rem;" src="img/valid.png" alt="" srcset=""></button></div>
+                <div class="round-player-time flex-item-line">time</div>
+            </div>
+            <hr style="border:0.1rem solid grey; width: 100%;">
+            <div class="round-player-line flex-container-row">
+                <div class="round-player-name flex-item-line">ELI</div>
+                <div class="round-player-input1 flex-item-line"> <label class="input-label" for="input1">Animal</label> <input disabled type="text" class="input-self bg-green" name="input1-player1"><button class="btn-input bg-green btn-disabled">OK</button></div>
+                <div class="round-player-input2 flex-item-line"> <label class="input-label" for="input2">Animal</label> <input disabled type="text" class="input-other bg-red" name="input1-player1"><button class="btn-input bg-red btn-disabled">OK</button></div>
+                <div class="round-player-time flex-item-line">time</div>
+            </div>
+            <hr style="border:0.1rem solid grey; width: 100%;">
+            <div class="round-player-line flex-container-row">
+                <div class="round-player-name flex-item-line">LILLY</div>
+                <div class="round-player-input1 flex-item-line"> <label class="input-label" for="input1">Animal</label> <input disabled type="text" class="input-self bg-green" name="input1-player1"><button class="btn-input bg-green btn-disabled">OK</button></div>
+                <div class="round-player-input2 flex-item-line"> <label class="input-label" for="input2">Animal</label> <input disabled type="text" class="input-other bg-red" name="input1-player1"><button class="btn-input bg-red btn-disabled">OK</button></div>
+                <div class="round-player-time flex-item-line">time</div>
+            </div>
+
+
+
+        </div>
+        <div class="round-footer">
+            <h1>round footer</h1>
+        </div>
+    </div>
+
+    <div style="display: none;" class="flex-container-col">
+        <div class="anim-title">
+            <h1>screen 2 : anim</h1>
+        </div>
+        <div class="anim-main">
+            Dams </br>
+            Bast </br>
+            Eli </br>
+            Lily </br>
+        </div>
+        <div class="anim-title">
+            <h1>placeholder</h1>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+
+
+<script>
+    var get = `
+{"game": "3",
+  "round": "4",
+  "nextRound": "5",
+  "roundScoresPositive": {
+    "eli": "4",
+    "bast": "3",
+    "dams": "8",
+    "lily": "4"
+  },
+ "roundScoresNegative": {
+    "eli": "4",
+    "bast": "3",
+    "dams": "4",
+    "lily": "5"
+  },
+  "gameScores": {
+    "eli": "15",
+    "bast": "10",
+    "dams": "20",
+    "lily": "25"
+  },
+  "caddy": {
+    "eli": "[toilet paper]",
+    "bastien": "[toilet paper, pizza, beer]",
+    "dams": "[toilet paper, magnet]",
+    "lily": "[beer, sock]"
+  }
+}`
+
+
+
+
+</script>
