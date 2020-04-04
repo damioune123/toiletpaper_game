@@ -1,0 +1,7 @@
+version: '2'
+services:
+  toilet_paper_app:
+    build: .
+    command: node api/app.js
+    ports:
+      - "80:8080"

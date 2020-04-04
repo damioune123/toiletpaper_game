@@ -30,6 +30,7 @@ $(() =>{
          */
         bindEvents : () =>{
             IO.socket.on('connected', IO.onConnected);
+            IO.socket.on('disconnect', IO.disconnectedServer);
             IO.socket.on('new:player', IO.playerJoinedRoom);
             IO.socket.on('update:room', IO.roomUpdated);
             IO.socket.on('disconnected:player', IO.disconnectedPlayer);
@@ -98,6 +99,14 @@ $(() =>{
          */
         disconnectedPlayer: ({leftPlayer}) =>{
             console.log(`Client User - a player has disconnected in the room : ${leftPlayer.userName}`);
+        },
+        /**
+         * The game server left the game
+         */
+        disconnectedServer: () =>{
+            console.log(`Client User - The server has disconnected`);
+            App.reset();
+            alert('The server has disconnected - redirecting to home page');
         },
         /**
          * The game server left the game
@@ -216,6 +225,8 @@ $(() =>{
             };
 
             App.showScreenTemplate(App.$templateLobbyId);
+            $('#lobbyRoomName').empty();
+            $('#lobbyRoomName').append(`Room name : ${App.room.roomName}`);
             $('#lobbyCurrentUser').empty();
             $('#lobbyCurrentUser').append(`Username : ${App.currentPlayer.userName}`);
             loadPlayersOnLobby();
@@ -251,7 +262,7 @@ $(() =>{
                 response = await axios.get(`${App.API_URL}/rooms/join`, {params: data});
             }catch(error){
                 console.log('Error while joining the room', error.response.data);
-                if(error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
+                if(error.response && error.response.data && error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
                     alert(error.response.data.details[0].message);
                 }
                 else{
@@ -264,7 +275,7 @@ $(() =>{
             IO.init();
         },
         /**
-         * Ask game server to lauch Launch Game
+         * Ask game server to Launch Game
          *
          */
         askHostToLaunchGame: () => {
