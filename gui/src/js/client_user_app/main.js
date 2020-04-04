@@ -216,6 +216,8 @@ $(() =>{
             };
 
             App.showScreenTemplate(App.$templateLobbyId);
+            $('#lobbyRoomName').empty();
+            $('#lobbyRoomName').append(`Room name : ${App.room.roomName}`);
             $('#lobbyCurrentUser').empty();
             $('#lobbyCurrentUser').append(`Username : ${App.currentPlayer.userName}`);
             loadPlayersOnLobby();
