@@ -29,7 +29,22 @@ const IO = {
     IO.socket.on('update:room', IO.roomUpdated );
     IO.socket.on('disconnected:player', IO.disconnectedPlayer);
     IO.socket.on('server:error', IO.error);
+    IO.socket.on('game:start', App.startGame);
+
     IO.socket.on('error', IO.error );
+  },
+  /**
+   * Broadcast data to palyer
+   */
+  broadcastToPlayers : (eventType, data = {}) => {
+    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'broadcast', from: App.room.gameServerSocketId, eventType }}, {gameState: App.gameState}));
+  },
+  /**
+   * Send message to a particular player with its player id
+   */
+  sendMessageToPlayer : (eventType, playerId, data = {}) => {
+    const socketId = App.room.roomState.players[playerId].socketId;
+    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'single', to: socketId, from: App.room.gameServerSocketId, eventType}},{gameState: App.gameState}));
   },
 
   /**
@@ -119,6 +134,17 @@ const App = {
     return response.data;
   },
  //ADD HERE ALL FUNCTION THAT WILL change the app state
+  startGame: (data) =>{
+    console.log('Game Server - game:start event received')
+    App.initGameState();
+    IO.broadcastToPlayers('game:started',{message: 'Game well started !'})
+  },
+  initGameState: () =>{
+    App.gameState ={
+      status: 'running',
+      currentRound: 0,
+    }
+  }
 
 };
 export default App;
