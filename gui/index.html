@@ -58,22 +58,26 @@
   </div>
 </script>
 
-<!-- This is the 'Host' screen. It displays the word for each player to match -->
-<script id="host-game-template" type="text/template">
-  <div id="wordArea">
-    <div id="hostWord">5</div>
+<!-- This is the lobby screen -->
+<script id="lobby-template" type="text/template">
+  <div class="lobbyWrapper">
+    <h1 id="lobbyAmountTotalPlayers"></h1>
+    <h1 id="lobbyAmountConnectedPlayers"></h1>
+    <ul id="lobbyPlayersList">
+
+    </ul>
+    <button id="btnStartGame" class="btn">Start Game</button>
   </div>
-  <div id="playerScores">
-    <div id="player1Score" class="playerScore">
-      <span class="score">0</span><span class="playerName">Player 1</span>
-    </div>
-    <div id="player2Score" class="playerScore">
-      <span class="playerName">Player 2</span><span class="score">0</span>
+</script>
+<!-- This is the screen where the game actually happens -->
+
+<script id="game-template" type="text/template">
+  <div class="gameWrapper">
+    <div class="title">
+      THIS IS THE GAME PAGE
     </div>
   </div>
 </script>
-<!-- app.js is where all the client-side Anagrammatix game logic -->
 <script src="bundle.min.js"></script>
-
 </body>
 </html>
