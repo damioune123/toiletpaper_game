@@ -1,5 +1,22 @@
 import axios from 'axios';
 import io from 'socket.io-client';
+
+const DEFAULT_GAME_STATE = {
+  game: 0,
+  round: 0,
+  nextRound: 1,
+  roundScoresPositive: {},
+  roundScoresNegative: {},
+  gameScores: {},
+  caddy: {}
+};
+const AVAILABLE_ITEMS = {
+  toiletPaper: "Toilet paper",
+  pizza: "Pizza",
+  beer: "Beer",
+  sock: "Sock",
+  magnet: "Magnet"
+};
 /**
  * All the code relevant to Socket.IO is collected in the IO namespace.
  *
@@ -141,10 +158,20 @@ const App = {
     IO.broadcastToPlayers('game:started',{message: 'Game well started !'})
   },
   initGameState: () =>{
-    App.gameState ={
-      status: 'running',
-      currentRound: 0,
-    }
+    App.gameState = JSON.parse(JSON.stringify(DEFAULT_GAME_STATE));
+    const players = App.getPlayersAsList();
+    players.forEach((player)=>{
+      App.gameState.roundScoresPositive[player.userId] = 0;
+      App.gameState.roundScoresNegative[player.userId] = 0;
+      App.gameState.gameScores[player.userId] = 0;
+      App.gameState.caddy[player.userId] = [];
+    })
+  },
+  getPlayersAsList :()=>{
+    return Object.keys(App.room.roomState.players).reduce((players, playerKey)=>{
+      players.push(App.room.roomState.players[playerKey]);
+      return players;
+    },[]);
   }
 
 };

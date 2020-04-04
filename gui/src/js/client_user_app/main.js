@@ -181,7 +181,7 @@ $(() =>{
             App.$templateCreateRoomId = '#create-room-template';
             App.$templateJoinRoomId = '#join-room-template';
             App.$templateLobbyId = '#lobby-template';
-            App.$gameTemplateId = '#game-template';
+            App.$animScreenTemplatedId = '#anim-screen-template';
         },
         /**
          * Create some click handlers for the various buttons that appear on-screen.
@@ -289,7 +289,7 @@ $(() =>{
         onGameStarted: (data) => {
             console.log('Client user - on game:started event received ');
             App.gameState = data.gameState;
-            App.showScreenTemplate(App.$gameTemplateId);
+            App.showScreenTemplate(App.$animScreenTemplatedId);
         },
 
         // UTILITY
