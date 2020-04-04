@@ -1,5 +1,6 @@
-import gameServerApp from '../game_server_app/main';
 import io from 'socket.io-client';
+import axios from 'axios';
+import gameServerApp from '../game_server_app/main';
 
 $(() =>{
     /**
@@ -72,7 +73,7 @@ $(() =>{
     };
 
     const App = {
-        apiUrl: process.env.API_URL,
+        API_URL: process.env.API_URL,
         /**
          * This is a local copy of the  game state
          *
@@ -113,6 +114,7 @@ $(() =>{
             App.$gameArea = $('#gameArea');
             App.$templateIntroScreenId = '#intro-screen-template';
             App.$templateCreateRoomId = '#create-room-template';
+            App.$templateJoinRoomId = '#join-room-template';
             App.$templateLobbyId = '#lobby-template';
             App.$gameTemplateId = '#game-template';
         },
@@ -120,8 +122,10 @@ $(() =>{
          * Create some click handlers for the various buttons that appear on-screen.
          */
         bindEvents: () => {
-            App.$doc.on('click', '#btnCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoomId));
-            App.$doc.on('click', '#btnStartRoom', App.createNewRoom);
+            App.$doc.on('click', '#btnGoToCreateRoom', () => App.showScreenTemplate(App.$templateCreateRoomId));
+            App.$doc.on('click', '#btnGoToJoinRoom', () => App.showScreenTemplate(App.$templateJoinRoomId));
+            App.$doc.on('click', '#btnCreateRoom', App.createNewRoom);
+            App.$doc.on('click', '#btnJoinRoom', App.joinRoom);
             App.$doc.on('click', '#btnStartGame', App.launchGame);
         },
 
@@ -166,8 +170,8 @@ $(() =>{
          */
         createNewRoom: async () => {
             const data = {
-                roomName : $('#inputRoomName').val(),
-                userName : $('#inputPlayerName').val()
+                roomName : $('#inputRoomNameForNewRoom').val(),
+                userName : $('#inputPlayerNameForNewRoom').val()
             };
             const room = await gameServerApp.createNewRoom(data);
             if(room){
@@ -175,6 +179,31 @@ $(() =>{
                 App.currentPlayer = room.roomState.players[room.currentPlayerId];
                 IO.init();
             }
+        },
+        /**
+         * create a new room
+         */
+        joinRoom: async () => {
+            const data = {
+                roomName : $('#inputRoomNameToJoinRoom').val(),
+                userName : $('#inputPlayerNameToJoinRoom').val()
+            };
+            let response;
+            try{
+                response = await axios.get(`${App.API_URL}/rooms/join`, {params: data});
+            }catch(error){
+                console.log('Error while joining the room', error.response.data);
+                if(error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
+                    alert(error.response.data.details[0].message);
+                }
+                else{
+                    alert(JSON.stringify(error.response.data));
+                }
+                return;
+            }
+            App.room = response.data;
+            App.currentPlayer = App.room.roomState.players[App.room.currentPlayerId];
+            IO.init();
         },
         /**
          * Launch Game

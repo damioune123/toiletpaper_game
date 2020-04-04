@@ -29,8 +29,8 @@
 
     <div class="buttons">
 
-      <button id="btnCreateRoom" class="btn left">CREATE ROOM</button>
-      <button id="btnJoinRoom" class="btn right">JOIN ROOM</button>
+      <button id="btnGoToCreateRoom" class="btn left">CREATE ROOM</button>
+      <button id="btnGoToJoinRoom" class="btn right">JOIN ROOM</button>
       <div style="clear:both"></div>
     </div>
 
@@ -42,22 +42,39 @@
 <script id="create-room-template" type="text/template">
   <div class="createRoomWrapper">
     <div class="info">
-      <label for="inputPlayerName">Your Name:</label>
-      <input id="inputPlayerName" type="text" />
+      <label for="inputPlayerNameForNewRoom">Your Name:</label>
+      <input id="inputPlayerNameForNewRoom" type="text" />
     </div>
 
     <div class="info">
-      <label for="inputRoomName">Room name:</label>
-      <input id="inputRoomName" type="text"/>
+      <label for="inputRoomNameForNewRoom">Room name:</label>
+      <input id="inputRoomNameForNewRoom" type="text"/>
     </div>
 
     <div class="info buttons">
-      <button id="btnStartRoom" class="btn">Create</button>
-      <div id="playerWaitingMessage"></div>
+      <button id="btnCreateRoom" class="btn">Create</button>
     </div>
   </div>
 </script>
 
+<!-- This screen appears when a player clicks "Join" on the Title Screen -->
+<script id="join-room-template" type="text/template">
+  <div class="joinRoomWrapper">
+    <div class="info">
+      <label for="inputPlayerNameToJoinRoom">Your Name:</label>
+      <input id="inputPlayerNameToJoinRoom" type="text" />
+    </div>
+
+    <div class="info">
+      <label for="inputRoomNameToJoinRoom">Room name:</label>
+      <input id="inputRoomNameToJoinRoom" type="text"/>
+    </div>
+
+    <div class="info buttons">
+      <button id="btnJoinRoom" class="btn">JOIN</button>
+    </div>
+  </div>
+</script>
 <!-- This is the lobby screen -->
 <script id="lobby-template" type="text/template">
   <div class="lobbyWrapper">

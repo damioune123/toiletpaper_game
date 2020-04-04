@@ -6,8 +6,14 @@ const addRoom = (roomId, room) =>{
 const getRooms = ()=>{
     return rooms;
 };
-const getRoom = (roomId)=>{
+const getRoomWithId = (roomId)=>{
     return rooms[roomId];
+};
+const getRoomWithName = (roomName)=>{
+    return Object.keys(rooms).map((key)=>rooms[key]).find((room)=> room.roomName === roomName);
+};
+const getPlayerInRoomWithHisName = (room, userName)=>{
+    return Object.keys(room.roomState.players).map((key)=>room.roomState.players[key]).find((player)=> player.userName=== userName);
 };
 const isRoomNameTaken = (roomName)=>{
     const roomsPerRoomName = Object.keys(rooms).reduce((dic, key)=>{
@@ -18,7 +24,9 @@ const isRoomNameTaken = (roomName)=>{
 };
 module.exports = {
     addRoom,
-    getRoom,
+    getRoomWithId,
+    getPlayerInRoomWithHisName,
+    getRoomWithName,
     getRooms,
     isRoomNameTaken,
 };
