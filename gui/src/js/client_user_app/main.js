@@ -17,6 +17,12 @@ $(() =>{
             IO.socket = io(process.env.SOCKET_URL);
             IO.bindEvents();
         },
+        /**
+         * This reset the IO state
+         */
+        reset: () =>{
+            IO.socket = null;
+        },
 
         /**
          * While connected, Socket.IO will listen to the following events emitted
@@ -26,6 +32,9 @@ $(() =>{
             IO.socket.on('connected', IO.onConnected);
             IO.socket.on('new:player', IO.playerJoinedRoom);
             IO.socket.on('update:room', IO.roomUpdated);
+            IO.socket.on('disconnected:player', IO.disconnectedPlayer);
+            IO.socket.on('disconnected:host', IO.disconnectedHost);
+            IO.socket.on('server:error', IO.error);
             IO.socket.on('error', IO.error);
         },
 
@@ -61,6 +70,20 @@ $(() =>{
             if(App.currentPageId === App.$templateLobbyId){
                 App.showLobbyScreen();
             }
+        },
+        /**
+         * A player left the room
+         * @param data {{player: object}}
+         */
+        disconnectedPlayer: ({leftPlayer}) =>{
+            console.log(`Client User - a player has disconnected in the room : ${leftPlayer.userName}`);
+        },
+        /**
+         * The game server left the game
+         */
+        disconnectedHost: () =>{
+            console.log(`Client User - The game server (host) left the game`);
+            App.reset();
         },
         /**
          * An error has occurred.
@@ -104,6 +127,17 @@ $(() =>{
             App.bindEvents();
             // Initialize the fastclick library
             FastClick.attach(document.body);
+        },
+        /**
+         * This reset the APP state
+         */
+        reset: () =>{
+            IO.reset();
+            App.gameState = {};
+            App.room = {};
+            App.currentPlayer = {};
+            App.currentPageId= null;
+            App.init();
         },
         /**
          * Create references to on-screen elements used throughout the game.
@@ -197,7 +231,7 @@ $(() =>{
                     alert(error.response.data.details[0].message);
                 }
                 else{
-                    alert(JSON.stringify(error.response.data));
+                    alert(JSON.stringify(error.response ? error.response.data : error));
                 }
                 return;
             }

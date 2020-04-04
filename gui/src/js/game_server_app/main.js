@@ -13,7 +13,12 @@ const IO = {
     IO.socket = io(process.env.SOCKET_URL);
     IO.bindEvents();
   },
-
+  /**
+   * This reset the IO state
+   */
+  reset: () =>{
+    IO.socket = null;
+  },
   /**
    * While connected, Socket.IO will listen to the following events emitted
    * by the Socket.IO server, then run the appropriate function.
@@ -22,6 +27,8 @@ const IO = {
     IO.socket.on('connected', IO.onConnected );
     IO.socket.on('new:player', IO.playerJoinedRoom );
     IO.socket.on('update:room', IO.roomUpdated );
+    IO.socket.on('disconnected:player', IO.disconnectedPlayer);
+    IO.socket.on('server:error', IO.error);
     IO.socket.on('error', IO.error );
   },
 
@@ -45,8 +52,15 @@ const IO = {
    * @param data {{room: object}}
    */
   roomUpdated : ({room}) =>{
-    console.log('Client User - room local copy updated');
+    console.log('Game Server - room local copy updated');
     App.room = room;
+  },
+  /**
+   * A player left the room
+   * @param data {{player: object}}
+   */
+  disconnectedPlayer: ({leftPlayer}) =>{
+    console.log(`Game Server - a player has disconnected in the room : ${leftPlayer.userName}`);
   },
   /**
    * An error has occurred.
@@ -74,6 +88,14 @@ const App = {
    */
   room: {},
   /**
+   * This reset the APP state
+   */
+  reset: () =>{
+    IO.reset();
+    App.gameState = {};
+    App.room = {}
+  },
+  /**
    * This will create a room in the backend and then in init the websocket if the room was successfully created
    * @param roomData
    * @returns Either the room object or false if an error occurred
@@ -88,7 +110,7 @@ const App = {
         alert(error.response.data.details[0].message);
       }
       else{
-        alert(JSON.stringify(error.response.data));
+        alert(JSON.stringify(error.response ? error.response.data : error));
       }
       return false;
     }

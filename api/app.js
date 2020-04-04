@@ -28,8 +28,15 @@ io.set('log level', 1);
 io.on('connection', (socket)=>{
     console.log('a user has connected');
     lockDownRaceSocketHandler.handleSocket(io, socket);
-
+    //Disonnect the websocket
+    socket.on('disconnect', ()=>{
+        console.log('a user has disconnected');
+        lockDownRaceSocketHandler.handleDisconnectedSocket(io, socket);
+    });
 });
+
+
+
 
 // Create a Node.js based http server on port 8080
 http.listen(8080, ()=>{
