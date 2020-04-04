@@ -262,7 +262,7 @@ $(() =>{
                 response = await axios.get(`${App.API_URL}/rooms/join`, {params: data});
             }catch(error){
                 console.log('Error while joining the room', error.response.data);
-                if(error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
+                if(error.response && error.response.data && error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
                     alert(error.response.data.details[0].message);
                 }
                 else{
@@ -275,7 +275,7 @@ $(() =>{
             IO.init();
         },
         /**
-         * Ask game server to lauch Launch Game
+         * Ask game server to Launch Game
          *
          */
         askHostToLaunchGame: () => {
