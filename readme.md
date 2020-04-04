@@ -21,7 +21,7 @@
 1. Install docker-compose ( https://docs.docker.com/compose/install/ )
 2. Launch a terminal and type : docker-compose up
 
-## Deploy on heroku
+## Deploy on heroku manually (this is triggered automatically when pushing/mergin on master)
 
 1. Install Heroku CLI
 2. (sudo) heroku login
