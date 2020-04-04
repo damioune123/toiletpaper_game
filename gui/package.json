@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack -p",
+    "build:heroku": "webpack -p --env heroku",
     "start:dev": "webpack-dev-server --mode development --hot"
   },
   "dependencies": {
