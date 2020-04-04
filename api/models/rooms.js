@@ -6,6 +6,15 @@ const addRoom = (roomId, room) =>{
 const getRooms = ()=>{
     return rooms;
 };
+const removeRoom = (roomId)=>{
+    if(rooms[roomId]){
+        delete rooms[roomId];
+        return true;
+    }
+    else{
+        return false;
+    }
+};
 const getRoomWithId = (roomId)=>{
     return rooms[roomId];
 };
@@ -28,5 +37,6 @@ module.exports = {
     getPlayerInRoomWithHisName,
     getRoomWithName,
     getRooms,
+    removeRoom,
     isRoomNameTaken,
 };
