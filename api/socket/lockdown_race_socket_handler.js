@@ -15,7 +15,9 @@ exports.handleSocket = function(sio, socket){
     // Global Events
     socket.on('join:room', joinRoom);
 
-    // Host Events
+    // Game communication events
+    socket.on('game-communication', forwardGameMessage);
+
 
     // Player Events
     //TODO
@@ -56,7 +58,33 @@ exports.handleDisconnectedSocket = function(sio, socket){
         io.to(currentMetaInfo.room.roomId).emit('update:room', {room: currentMetaInfo.room });
     }
 };
-
+/**
+ * Forward game message
+ * @params room, the room to join
+ */
+function forwardGameMessage(data) {
+    const dataMeta = data.meta;
+    const currentMetaInfo = metaInfo[this.id.toString()];
+    if(!currentMetaInfo){
+        const msg = 'An unregistered socket tried to forward message';
+        logger.log('error', msg)
+    }
+    if(dataMeta.sendType === 'broadcast'){
+        //broadcasting to the room
+        io.to(currentMetaInfo.room.roomId).emit(dataMeta.eventType, data);
+    }
+    else if(dataMeta.sendType === 'single'){
+        //sending a message to particular client
+        if(metaInfo[dataMeta.to] && (metaInfo[dataMeta.to].isHost || metaInfo[dataMeta.to].player && metaInfo[dataMeta.to].player.isConnected)){
+            const recipientSocket = metaInfo[dataMeta.to].socket;
+            recipientSocket.emit(dataMeta.eventType, data);
+        }
+        else{
+            const msg = 'Could not find the socket id of the recipient or the client disconnected';
+            logger.log('error', msg);
+        }
+    }
+}
 /* *******************************
    *                             *
    *       HOST FUNCTIONS        *

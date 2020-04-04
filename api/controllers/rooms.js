@@ -42,7 +42,6 @@ exports.add = async (req, res, next) => {
             gameStatus: 'waiting', // can be waiting, running, paused
             players:{}
         },
-        gameState: null
     };
     room.roomState.players[currentPlayerId] = currentPlayer;
     rooms.addRoom(roomId, room);

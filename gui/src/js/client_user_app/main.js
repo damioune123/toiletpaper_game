@@ -36,6 +36,27 @@ $(() =>{
             IO.socket.on('disconnected:host', IO.disconnectedHost);
             IO.socket.on('server:error', IO.error);
             IO.socket.on('error', IO.error);
+            IO.socket.on('game:started', App.onGameStarted);
+
+        },
+        /**
+         * Broadcast data to palyer
+         */
+        broadcastToPlayers : (eventType, data = {}) => {
+            IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'broadcast', from: App.currentPlayer.socketId, eventType}}));
+        },
+        /**
+         * Send message to host
+         */
+        sendMessageToHost : (eventType, data = {}) => {
+            IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'single', to: App.room.gameServerSocketId, from: App.currentPlayer.socketId, eventType}}));
+        },
+        /**
+         * Send message to a particular player with its player id
+         */
+        sendMessageToPlayer : (eventType, playerId, data = {}) => {
+            const socketId = App.room.roomState.players[playerId].socketId;
+            IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'single', to: socketId, from: App.currentPlayer.socketId, eventType}}));
         },
 
         /**
@@ -161,7 +182,7 @@ $(() =>{
             App.$doc.on('click', '#btnGoToJoinRoom', () => App.showScreenTemplate(App.$templateJoinRoomId));
             App.$doc.on('click', '#btnCreateRoom', App.createNewRoom);
             App.$doc.on('click', '#btnJoinRoom', App.joinRoom);
-            App.$doc.on('click', '#btnStartGame', App.launchGame);
+            App.$doc.on('click', '#btnStartGame', App.askHostToLaunchGame);
         },
 
         // Show screen function
@@ -243,14 +264,21 @@ $(() =>{
             IO.init();
         },
         /**
-         * Launch Game
+         * Ask game server to lauch Launch Game
          *
          */
-        launchGame: () => {
-            //TODO SOCKET LOGIC TO INIT GAME on the game server app
+        askHostToLaunchGame: () => {
+            console.log('ask host to launch game')
+            IO.sendMessageToHost('game:start');
+        },
+        /**
+         * onGameStarted
+         *
+         */
+        onGameStarted: (data) => {
+            console.log('Client user - on game:started event received ');
+            App.gameState = data.gameState;
             App.showScreenTemplate(App.$gameTemplateId);
-            App.doTextFit('.title');
-
         },
 
         // UTILITY
