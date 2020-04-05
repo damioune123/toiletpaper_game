@@ -14,6 +14,5 @@ const handleApiError =  (error, msg = '') => {
     alert(error);
 };
 module.exports = {
-    doTextFit,
     handleApiError
 };

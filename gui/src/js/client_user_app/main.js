@@ -308,14 +308,15 @@ $(() => {
          */
         onGameStarted: (data) => {
             console.log('Client user - on game:started event received ', data);
+            App.showScreenTemplate(App.$animScreenTemplatedId);
+            App.gameState = data.gameState;
+
             console.log('App room ', App.room);
             console.log('App room players ', App.room.roomState.players);
 
             let players = getPlayersAsList();
             players.forEach(p => {
-                console.log('yoo');
                 $('.round-main').append('<div>coucou</div>')
-
                 $('.round-main').eq(0).append(`
                 <div class="round-player-line flex-container-row">
                 <div class="round-player-name flex-item-line">${p.userName}</div>
@@ -328,8 +329,6 @@ $(() => {
             //round-main
             //round-player-line
 
-            App.gameState = data.gameState;
-            App.showScreenTemplate(App.$animScreenTemplatedId);
         },
 
         // UTILITY
