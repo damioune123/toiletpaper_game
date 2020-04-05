@@ -49,7 +49,6 @@ const IO = {
     IO.socket.on('disconnected:player', IO.disconnectedPlayer);
     IO.socket.on('server:error', IO.error);
     IO.socket.on('game:start', App.startGame);
-
     IO.socket.on('error', IO.error );
   },
   /**
@@ -170,8 +169,7 @@ const App = {
     }
     App.dictionary = response.data;
   },
- //ADD HERE ALL FUNCTION THAT WILL change the app state
-  startGame: (data) =>{
+  startGame: () =>{
     console.log('Game Server - game:start event received');
     App.initGameState();
     IO.broadcastToPlayers('game:started');
