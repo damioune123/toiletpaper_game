@@ -25,7 +25,7 @@ const buildDictionaries= async () =>{
         }
         return obj;
     };
-    const buildDictionnary = async (dictionary, directory)=>{
+    const buildDictionary = async (dictionary, directory)=>{
         const directoryPath = path.join(__dirname, directory);
         const files = fs.readdirSync(directoryPath);
         for (const fileName of files) {
@@ -35,9 +35,9 @@ const buildDictionaries= async () =>{
         }
     };
     console.log('Building EN dictionary');
-    await buildDictionnary(en, 'en');
+    await buildDictionary(en, 'en');
     console.log('Building FR dictionary');
-    await buildDictionnary(fr, 'fr');
+    await buildDictionary(fr, 'fr');
 };
 module.exports = {
     getDictionary,
