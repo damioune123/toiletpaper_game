@@ -38,7 +38,6 @@ $(() =>{
             IO.socket.on('server:error', IO.error);
             IO.socket.on('error', IO.error);
             IO.socket.on('game:started', App.onGameStarted);
-
         },
         /**
          * Broadcast data to palyer
@@ -322,8 +321,6 @@ $(() =>{
             App.$gameArea.html($(templateId).html());
             App.currentPageId = templateId;
         },
-
-
     };
     App.init();
 });

@@ -17,10 +17,6 @@ exports.handleSocket = function(sio, socket){
 
     // Game communication events
     socket.on('game-communication', forwardGameMessage);
-
-
-    // Player Events
-    //TODO
 };
 
 /**
