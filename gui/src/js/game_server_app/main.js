@@ -1,5 +1,6 @@
 import axios from 'axios';
 import io from 'socket.io-client';
+import utils from '../utils';
 
 const DEFAULT_GAME_STATE = {
   game: 0,
@@ -121,12 +122,18 @@ const App = {
    */
   room: {},
   /**
+   * The word dictionary fetched from backend
+   *
+   */
+  dictionary: {},
+  /**
    * This reset the APP state
    */
   reset: () =>{
     IO.reset();
     App.gameState = {};
-    App.room = {}
+    App.room = {};
+    App.dictionary = {};
   },
   /**
    * This will create a room in the backend and then in init the websocket if the room was successfully created
@@ -138,18 +145,30 @@ const App = {
     try{
       response = await axios.post(`${App.API_URL}/rooms`, roomData);
     }catch(error){
-      console.log('Error while creating the room', error);
-      if(error.response && error.response.data && error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
-        alert(error.response.data.details[0].message);
-      }
-      else{
-        alert(JSON.stringify(error.response ? error.response.data : error));
-      }
+      utils.handleApiError(error, 'Error while creating the room');
       return false;
     }
     App.room = response.data;
+    await App.fetchDictionary();
     IO.init();
     return response.data;
+  },
+  /**
+   * Fetch the room dictionary (according to the room language)
+   */
+  fetchDictionary: async () => {
+    console.log('Game server - fetch dictionary from backend');
+    const data = {
+      language : App.room.language,
+    };
+    let response;
+    try{
+      response = await axios.get(`${App.API_URL}/dictionaries`, {params: data});
+    }catch(error){
+      utils.handleApiError(error, 'Error while fetching the room dictionary');
+      return;
+    }
+    App.dictionary = response.data;
   },
  //ADD HERE ALL FUNCTION THAT WILL change the app state
   startGame: (data) =>{
