@@ -81,11 +81,6 @@ function forwardGameMessage(data) {
         }
     }
 }
-/* *******************************
-   *                             *
-   *       HOST FUNCTIONS        *
-   *                             *
-   ******************************* */
 
 /**
  * This is trigger when a game

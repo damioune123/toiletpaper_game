@@ -172,9 +172,9 @@ const App = {
   },
  //ADD HERE ALL FUNCTION THAT WILL change the app state
   startGame: (data) =>{
-    console.log('Game Server - game:start event received')
+    console.log('Game Server - game:start event received');
     App.initGameState();
-    IO.broadcastToPlayers('game:started',{message: 'Game well started !'})
+    IO.broadcastToPlayers('game:started');
   },
   initGameState: () =>{
     App.gameState = JSON.parse(JSON.stringify(DEFAULT_GAME_STATE));
