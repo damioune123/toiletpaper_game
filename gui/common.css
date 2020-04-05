@@ -159,3 +159,8 @@ p {
 .game-link{
     /* font-size: 1.3rem; */
 }
+.intro-header{
+    height: 10%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
