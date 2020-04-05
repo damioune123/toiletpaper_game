@@ -6,6 +6,8 @@
   "scripts": {
     "build": "webpack -p",
     "build:heroku": "webpack -p --env heroku",
+    "build:local.dev": "webpack -p --env local.dev",
+    "build:local.prod": "webpack -p --env local.prod",
     "start:dev": "webpack-dev-server --mode development --hot"
   },
   "dependencies": {
