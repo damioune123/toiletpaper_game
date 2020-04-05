@@ -56,4 +56,49 @@
 
 </body>
 
+<script>
+    //scocket request todo
+    var getSocket = `
+    {   
+        "players": "['eli','bast','dams','lily']",
+        "game": "3",
+        "round": "4",
+        "nextRound": "5",
+        "roundScoresPositive": {
+            "eli": "4",
+            "bast": "3",
+            "dams": "8",
+            "lily": "4"
+        },
+        "roundScoresNegative": {
+            "eli": "4",
+            "bast": "3",
+            "dams": "4",
+            "lily": "5"
+        },
+        "gameScores": {
+            "eli": "15",
+            "bast": "10",
+            "dams": "20",
+            "lily": "25"
+        },
+        "caddy": {
+            "eli": "[toilet paper]",
+            "bastien": "[toilet paper, pizza, beer]",
+            "dams": "[toilet paper, magnet]",
+            "lily": "[beer, sock]"
+        }
+    }`
+
+    let game = jQuery.parseJSON(getSocket);
+    // console.log(game.);
+    
+    //let players = JSON.parse("[1,2]");
+    console.log(game.players[0]);
+     
+
+
+
+</script>
+
 </html>

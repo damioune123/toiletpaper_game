@@ -201,7 +201,6 @@ $(() =>{
          */
         showInitScreenTemplate: () => {
             App.showScreenTemplate(App.$templateIntroScreenId);
-            App.doTextFit('.title');
         },
         /**
          * Show a regular screen template
@@ -217,7 +216,7 @@ $(() =>{
                 Object.keys(App.room.roomState.players).forEach((key)=>{
                     const player = App.room.roomState.players[key];
                     if(player.isConnected) connectedPlayersAmount ++;
-                    const playerInfo = `Username : ${player.userName} | Connected ${player.isConnected}`;
+                    const playerInfo = `${player.userName}`; //| Connected ${player.isConnected}`;
                     ul.append(`<li>${playerInfo}</li>`);
                 });
                 $('#lobbyAmountConnectedPlayers').empty();
@@ -226,9 +225,9 @@ $(() =>{
 
             App.showScreenTemplate(App.$templateLobbyId);
             $('#lobbyRoomName').empty();
-            $('#lobbyRoomName').append(`Room name : ${App.room.roomName}`);
+            $('#lobbyRoomName').append(`${App.room.roomName}`);
             $('#lobbyCurrentUser').empty();
-            $('#lobbyCurrentUser').append(`Username : ${App.currentPlayer.userName}`);
+            $('#lobbyCurrentUser').append(`${App.currentPlayer.userName}`);
             loadPlayersOnLobby();
         },
 
@@ -287,7 +286,15 @@ $(() =>{
          *
          */
         onGameStarted: (data) => {
-            console.log('Client user - on game:started event received ');
+            console.log('Client user - on game:started event received ', data);
+            console.log('App room ', App.room);
+            console.log('App room players ', App.room.roomState.players);
+            let players = App.room.roomState.players;
+            players.forEach(p => {
+                console.log(p.userName,p);
+            });
+            
+            
             App.gameState = data.gameState;
             App.showScreenTemplate(App.$animScreenTemplatedId);
         },

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
 
   <!-- Ensure that everything scales appropriately on a mobile device -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
   <!-- Let's borrow a cool looking Font from Google -->
   <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
@@ -14,83 +16,175 @@
 <body>
 
 
-<div id="gameArea">
-  <!-- This is where the templates defined below will be used -->
-</div>
-
-<!-- Main Title Screen that appears when the page loads for the first time -->
-<script id="intro-screen-template" type="text/template">
-
-  <div class="titleWrapper">
-
-    <div class="title">
-      TOILET PAPER GAME
-    </div>
-
-    <div class="buttons">
-
-      <button id="btnGoToCreateRoom" class="btn left">CREATE ROOM</button>
-      <button id="btnGoToJoinRoom" class="btn right">JOIN ROOM</button>
-      <div style="clear:both"></div>
-    </div>
-
+  <div id="gameArea">
+    <!-- This is where the templates defined below will be used -->
   </div>
 
-</script>
+  <!-- Main Title Screen that appears when the page loads for the first time -->
+  <script id="intro-screen-template" type="text/template">
 
-<!-- This screen appears when a player clicks "Create" on the Title Screen -->
-<script id="create-room-template" type="text/template">
-  <div class="createRoomWrapper">
-    <div class="info">
-      <label for="inputPlayerNameForNewRoom">Your Name:</label>
-      <input id="inputPlayerNameForNewRoom" type="text" />
-    </div>
+  <div class="background"
+    style="width: 100%;height: 100%;background-image: url('src/img/motifs/bleu_petite_ligne.png');">
+    <div class="flex-container-col">
+      <div class="intro-header">
+        <h1>Toilet Paper Game</h1>
+      </div>
+      <div class="intro-main half flex-container-col">
+        <div id="btnGoToCreateRoom" class="">
+          <div class="flex-item-line">
+            <h2>CREATE GAME</h2>
+          </div>
+        </div>
+      </div>
 
-    <div class="info">
-      <label for="inputRoomNameForNewRoom">Room name:</label>
-      <input id="inputRoomNameForNewRoom" type="text"/>
-    </div>
+      <div class="intro-main half flex-container-col">
+        <div id="btnGoToJoinRoom" class="">
+          <div class="flex-item-line">
+            <h2>JOIN GAME</h2>
+          </div>
+        </div>
+      </div>
 
-    <div class="info buttons">
-      <button id="btnCreateRoom" class="btn">Create</button>
-    </div>
-  </div>
-</script>
-
-<!-- This screen appears when a player clicks "Join" on the Title Screen -->
-<script id="join-room-template" type="text/template">
-  <div class="joinRoomWrapper">
-    <div class="info">
-      <label for="inputPlayerNameToJoinRoom">Your Name:</label>
-      <input id="inputPlayerNameToJoinRoom" type="text" />
-    </div>
-
-    <div class="info">
-      <label for="inputRoomNameToJoinRoom">Room name:</label>
-      <input id="inputRoomNameToJoinRoom" type="text"/>
-    </div>
-
-    <div class="info buttons">
-      <button id="btnJoinRoom" class="btn">JOIN</button>
+      <div class="intro-footer">
+        <h3>"May the toilet paper be with you" <br> Yodass.</h3>
+      </div>
     </div>
   </div>
-</script>
-<!-- This is the lobby screen -->
-<script id="lobby-template" type="text/template">
-  <div class="lobbyWrapper">
-    <h1 id="lobbyRoomName"></h1>
-    <h1 id="lobbyCurrentUser"></h1>
-    <h2 id="lobbyAmountTotalPlayers"></h2>
-    <h2 id="lobbyAmountConnectedPlayers"></h2>
-    <ul id="lobbyPlayersList">
 
-    </ul>
-    <button id="btnStartGame" class="btn">Start Game</button>
+
+  </script>
+
+  <script id="create-room-template" type="text/template">
+  <div class="background"
+    style="width: 100%;height: 100%;background-image: url('src/img/motifs/bleu_petite_ligne.png');">
+    <div class="flex-container-col">
+      <div class="intro-header">
+        <h1>Toilet Paper Game</h1>
+      </div>
+
+      <div class="border-only-main half flex-container-col">
+        <div class="">
+          <div class="flex-item-line">
+            <br>
+            <div class="border-pink">
+              <h2>CREATE GAME </h2>
+            </div>
+            <br>
+
+            <label for="yourname">
+              <h3> Your name: </h3>
+            </label>
+            <input id="inputPlayerNameForNewRoom" class="input-intro" type="text" name="yourname"><br><br>
+            <label for="teamgame">
+              <h3> Room name: </h3>
+            </label>
+            <input id="inputRoomNameForNewRoom" class="input-intro" type="text" id="fname" name="fname"><br><br>
+            <button id="btnCreateRoom" class="btn-start">CREATE</button>
+            <!-- <h3>Share this link :</h3>
+              <h3 style='color: white;'>toiletpapergame.herokuapp.com/yourgamename</h3> <br> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-footer">
+      <h3><u> back </u></h3>
+    </div>
   </div>
-</script>
-<!-- This is the screen where the game actually happens -->
 
-<script id="anim-screen-template" type="text/template">
+  </script>
+
+
+
+  <script id="join-room-template" type="text/template">
+  <div class="background"
+    style="width: 100%;height: 100%;background-image: url('src/img/motifs/bleu_petite_ligne.png');">
+    <div class="flex-container-col">
+      <div class="intro-header">
+        <h1>Toilet Paper Game</h1>
+      </div>
+      <div class="border-only-main half flex-container-col">
+        <div class="">
+          <div class="flex-item-line">
+            <br>
+            <div class="border-pink">
+              <h2>JOIN GAME </h2>
+            </div>
+            <br>
+            <label for="teamgame">
+              <h3> Your name: </h3>
+            </label>
+            <input id="inputPlayerNameToJoinRoom" class="input-intro" type="text" name="yourname"><br><br>
+            <label for="teamgame">
+              <h3> Room name: </h3>
+            </label>
+            <input id="inputRoomNameToJoinRoom" class="input-intro" type="text" name="roomname"><br><br>
+            <button id="btnJoinRoom" class="btn-start">JOIN</button>
+          </div>
+        </div>
+      </div>
+      <div class="intro-footer">
+        <h3><u> back </u></h3>
+      </div>
+    </div>
+  </div>
+  </script>
+
+
+
+
+  <!-- This is the lobby screen -->
+  <script id="lobby-template" type="text/template">
+
+<div class="background"
+    style="width: 100%;height: 100%;background-image: url('src/img/motifs/bleu_petite_ligne.png');">
+  <div class="flex-container-col">
+    <div class="intro-header">
+      <h1 class="">Toilet Paper Game</h1>
+    </div>
+    <div class="border-only-main half flex-container-col">
+      <div class="">
+        <div class="flex-item-line">
+          <br>
+          <div class="border-pink">
+            <h2>Waiting for everyone ... </h2>
+          </div>
+          <br>
+          <div class="flex-container-row">
+            <ul id="lobbyPlayersList" class="flex-container-row">
+            </ul>
+          </div>
+          <button id="btnStartGame" class="btn-start">START GAME</button><br>
+          
+          <h3 class="border-pink" style='color: white;'>
+             <span style="font-size:1rem; color:black">Share this link to your friend :</span><br>
+            <span class="game-link">toiletpapergame.herokuapp.com/<span
+                id="lobbyRoomName"></span></span>
+            <br><button class="btn-copy-link">COPY LINK</button>
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- <p id="lobbyCurrentUser"></p>
+    <p id="lobbyAmountTotalPlayers"></p>
+    <p id="lobbyAmountConnectedPlayers"></p> -->
+
+    <div class="intro-footer">
+      <h3><u> quit </u></h3>
+    </div>
+  </div>
+
+
+  </script>
+
+
+
+
+  <!-- This is the screen where the game actually happens -->
+
+  <script id="anim-screen-template" type="text/template">
   <div class="flex-container-col">
     <div class="round-header">
       <h1>Animal</h1>
@@ -145,6 +239,7 @@
     </div>
   </div>
 </script>
-<script src="bundle.min.js"></script>
+  <script src="bundle.min.js"></script>
 </body>
+
 </html>
