@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import axios from 'axios';
 import gameServerApp from '../game_server_app/main';
-
+import utils from '../utils';
 $(() =>{
     /**
      * All the code relevant to Socket.IO is collected in the IO namespace.
@@ -38,7 +38,6 @@ $(() =>{
             IO.socket.on('server:error', IO.error);
             IO.socket.on('error', IO.error);
             IO.socket.on('game:started', App.onGameStarted);
-
         },
         /**
          * Broadcast data to palyer
@@ -151,7 +150,16 @@ $(() =>{
          *
          */
         room: {},
+        /**
+         * This is the id of the current page
+         *
+         */
         currentPageId: null,
+        /**
+         * The word dictionary fetched from backend
+         *
+         */
+        dictionary: {},
         init: () => {
             App.cacheElements();
             App.showInitScreenTemplate();
@@ -245,6 +253,7 @@ $(() =>{
             if(room){
                 App.room = room;
                 App.currentPlayer = room.roomState.players[room.currentPlayerId];
+                await App.fetchDictionary();
                 IO.init();
             }
         },
@@ -260,18 +269,30 @@ $(() =>{
             try{
                 response = await axios.get(`${App.API_URL}/rooms/join`, {params: data});
             }catch(error){
-                console.log('Error while joining the room', error.response.data);
-                if(error.response && error.response.data && error.response.data.details && error.response.data.details[0] && error.response.data.details[0].message){
-                    alert(error.response.data.details[0].message);
-                }
-                else{
-                    alert(JSON.stringify(error.response ? error.response.data : error));
-                }
+                utils.handleApiError(error, 'Error while joining the room');
                 return;
             }
             App.room = response.data;
             App.currentPlayer = App.room.roomState.players[App.room.currentPlayerId];
+            await App.fetchDictionary();
             IO.init();
+        },
+        /**
+         * Fetch the room dictionary (according to the room language)
+         */
+        fetchDictionary: async () => {
+            console.log('Client user - fetch dictionary from backend');
+            const data = {
+                language : App.room.language,
+            };
+            let response;
+            try{
+                response = await axios.get(`${App.API_URL}/dictionaries`, {params: data});
+            }catch(error){
+                utils.handleApiError(error, 'Error while fetching the room dictionary');
+                return;
+            }
+            App.dictionary = response.data;
         },
         /**
          * Ask game server to Launch Game
@@ -293,8 +314,8 @@ $(() =>{
             players.forEach(p => {
                 console.log(p.userName,p);
             });
-            
-            
+
+
             App.gameState = data.gameState;
             App.showScreenTemplate(App.$animScreenTemplatedId);
         },
@@ -307,25 +328,6 @@ $(() =>{
             App.$gameArea.html($(templateId).html());
             App.currentPageId = templateId;
         },
-
-        /**
-         * Make the text inside the given element as big as possible
-         * See: https://github.com/STRML/textFit
-         *
-         * @param el The parent element of some text
-         */
-        doTextFit : (el) => {
-            textFit(
-                $(el)[0],
-                {
-                    alignHoriz:true,
-                    alignVert:false,
-                    widthOnly:true,
-                    reProcess:true,
-                    maxFontSize:300
-                }
-            );
-        }
     };
     App.init();
 });

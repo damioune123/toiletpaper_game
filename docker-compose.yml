@@ -1,6 +1,8 @@
 version: '2'
 services:
   toilet_paper_app:
-    build: .
+    build:
+      context: .
+      dockerfile: local.Dockerfile
     ports:
-      - "80"
+      - "80:80"

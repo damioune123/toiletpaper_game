@@ -5,7 +5,7 @@ const fs = require('fs');
 
 module.exports =(env, argv) => {
     const isDevelopment = argv.mode === 'development';
-    const envFilePath = '.env.'+(argv.env || 'local');
+    const envFilePath = '.env.'+(argv.env || 'local.dev');
     fs.copyFileSync(envFilePath, '.env');
     /* Webpack config */
     const config = {
