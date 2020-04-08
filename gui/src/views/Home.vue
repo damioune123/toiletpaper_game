@@ -13,6 +13,9 @@ export default {
   name: "Home",
   components: {
     HelloWorld
+  },
+  created() {
+    console.log("yoyo", process.env.VUE_APP_API_URL);
   }
 };
 </script>
