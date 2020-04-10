@@ -1,0 +1,1 @@
+export const SOCKET_ACTION_PREFIX = "APP_SOCKET_";
