@@ -1,5 +1,5 @@
 import { RECEIVED_EVENTS } from "../../../enums/event-types";
-import { SOCKET_ACTION_PREFIX } from "./enums/global";
+import { SOCKET_ACTION_PREFIX } from "../../../enums/global";
 
 const APP_NAME = "Main app";
 const defaultState = () => {
