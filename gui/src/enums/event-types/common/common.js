@@ -8,4 +8,6 @@ export const COMMON_RECEIVED_EVENTS = {
   ERROR: "error"
 };
 
-export const COMMON_SEND_EVENTS = {};
+export const COMMON_SEND_EVENTS = {
+  JOIN_ROOM: "join:room"
+};

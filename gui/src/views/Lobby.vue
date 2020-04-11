@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import ClientUserAppSocketCommunication from "../mixins/ClientUserAppSocketCommunication";
+import ClientUserAppMixin from "../mixins/ClientUserAppMixin";
 export default {
   name: "Lobby",
-  mixins: [ClientUserAppSocketCommunication]
+  mixins: [ClientUserAppMixin]
 };
 </script>
 <style lang="css">

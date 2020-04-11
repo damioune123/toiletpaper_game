@@ -10,7 +10,10 @@
       <div class="intro-main half flex-container-col">
         <div id="btnGoToCreateRoom" class="">
           <div class="flex-item-line">
-            <button @click="redirectToRoomCreationPage">CREATE ROOM</button>
+            <button @click="onRedirectToCreateRoom">CREATE ROOM</button>
+          </div>
+          <div class="flex-item-line">
+            <button @click="onRedirectToJoinRoom">JOIN ROOM</button>
           </div>
         </div>
       </div>
@@ -29,8 +32,11 @@
 export default {
   name: "Home",
   methods: {
-    redirectToRoomCreationPage() {
+    onRedirectToCreateRoom() {
       this.$router.push({ name: "CreateRoom" });
+    },
+    onRedirectToJoinRoom() {
+      this.$router.push({ name: "JoinRoom" });
     }
   }
 };

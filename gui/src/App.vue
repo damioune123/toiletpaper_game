@@ -4,10 +4,10 @@
   </div>
 </template>
 <script>
-import ClientUserAppSocketCommunication from "./mixins/ClientUserAppSocketCommunication";
+import ClientUserAppMixin from "./mixins/ClientUserAppMixin";
 export default {
   name: "CreateRoom",
-  mixins: [ClientUserAppSocketCommunication],
+  mixins: [ClientUserAppMixin],
   created() {
     this.initClientSocket();
   }

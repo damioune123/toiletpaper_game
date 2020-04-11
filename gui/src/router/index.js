@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import CreateRoom from "../views/CreateRoom";
 import Lobby from "../views/Lobby";
+import JoinRoom from "../views/JoinRoom";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/lobby",
     name: "Lobby",
     component: Lobby
+  },
+  {
+    path: "/join-room",
+    name: "JoinRoom",
+    component: JoinRoom
   }
 ];
 const router = new VueRouter({

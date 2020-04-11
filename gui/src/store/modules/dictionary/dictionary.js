@@ -11,10 +11,14 @@ const mutations = {
 };
 
 const actions = {
-  fetchDictionary: async context => {
+  fetchDictionary: async function(context) {
     console.log(`${MODULE_NAME} - Fetching room dictionary`);
-    const { data } = await this.$rq.getDictionary(context.getters.room || "en");
-    context.commit("setDictionary", data);
+    const { data } = await this.$rq.getDictionary(
+      context.getters.language || "en"
+    );
+    if (data) {
+      context.commit("setDictionary", data);
+    }
   }
 };
 

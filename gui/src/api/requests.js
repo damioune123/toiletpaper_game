@@ -5,6 +5,12 @@ class AqAjaxRequests {
   //--------------------------------------------------------------------
   //  -- INIT ----------------------------------------------------------
   //--------------------------------------------------------------------
+  /**
+   *
+   * @type {AxiosInstance}
+   */
+  axiosRequest = null;
+
   init = function() {
     this.axiosRequest = axios.create({
       baseURL: process.env.VUE_APP_API_URL
@@ -37,12 +43,14 @@ class AqAjaxRequests {
     ) {
       formattedError = error.response.data.details[0].message;
     } else {
+      if (error.response) {
+        console.log(`http status : ${error.response.status}`);
+      }
       formattedError = JSON.stringify(
-        error.response ? error.response.data : error
+        error.response ? `${error.response.data}` : error
       );
     }
     console.log("Formatted API error - ", formattedError);
-    console.log("Request status : ", error.status);
     alert(formattedError);
   };
   //--------------------------------------------------------------------
