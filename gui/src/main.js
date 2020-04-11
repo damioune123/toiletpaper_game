@@ -4,12 +4,12 @@ import router from "./router";
 import store from "./store";
 import VueSocketIO from "vue-socket.io";
 import { SOCKET_ACTION_PREFIX } from "./enums/global";
-import $socket from './socket/socket-instance';
+import { clientAppSocketInstance } from "./socket/socket-instance";
 
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: $socket,
+    connection: clientAppSocketInstance,
     vuex: {
       store,
       actionPrefix: SOCKET_ACTION_PREFIX

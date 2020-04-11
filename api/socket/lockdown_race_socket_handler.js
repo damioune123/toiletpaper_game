@@ -33,6 +33,13 @@ exports.handleDisconnectedSocket = function(sio, socket){
         return;
     }
     const currentMetaInfo = metaInfo[socket.id];
+    if(!currentMetaInfo || !currentMetaInfo.room){
+        logger.info(socket.id+ " has disconnected and was not connected to a room");
+        if(currentMetaInfo){
+            delete metaInfo[socket.id];
+        }
+        return;
+    }
     if(currentMetaInfo.isHost){
         io.to(currentMetaInfo.room.roomId).emit('disconnected:host', {message: 'The game server has disconnected'});
         const socketsOfTheRoom = getAllConnectedSocketsFromARoom(currentMetaInfo.room.roomId);

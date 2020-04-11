@@ -1,3 +1,3 @@
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
-export default io(process.env.VUE_APP_SOCKET_URL);
+export const clientAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);

@@ -10,7 +10,7 @@
       <div class="intro-main half flex-container-col">
         <div id="btnGoToCreateRoom" class="">
           <div class="flex-item-line">
-            <h2>CREATE GAME</h2>
+            <button @click="createRoom">CREATE ROOM</button>
           </div>
         </div>
       </div>
@@ -26,25 +26,21 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueSocketIO from "vue-socket.io";
-import io from "socket.io-client";
-
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Home",
-  created() {
-    const gameServerAppSocket = io(process.env.VUE_APP_SOCKET_URL);
-
-    Vue.use(
-      new VueSocketIO({
-        debug: true,
-        connection: gameServerAppSocket,
-        vuex: {
-          store: this.$store,
-          actionPrefix: "GAME_SERVER_APP_SOCKET_"
-        }
-      })
-    );
+  computed: {
+    ...mapGetters({
+      clientSocket: "clientSocket"
+    })
+  },
+  methods: {
+    ...mapActions({
+      initGameServerSocket: 'initGameServerSocket',
+    }),
+    createRoom() {
+      console.log("Create room", this.clientSocket.id);
+    }
   }
 };
 </script>
