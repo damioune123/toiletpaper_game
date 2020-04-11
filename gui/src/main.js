@@ -2,21 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import VueSocketIO from "vue-socket.io";
-import { SOCKET_ACTION_PREFIX } from "./enums/global";
-import { clientAppSocketInstance } from "./socket/socket-instance";
+import Requests from "@/api/requests";
 
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection: clientAppSocketInstance,
-    vuex: {
-      store,
-      actionPrefix: SOCKET_ACTION_PREFIX
-    }
-  })
-);
-
+Vue.use(Requests);
 Vue.config.productionTip = false;
 
 new Vue({

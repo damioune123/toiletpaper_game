@@ -1,38 +1,55 @@
 <template>
   <div
-    class="home"
-    style="width: 100%;height: 100%; background-image: url('src/assets/img/motifs/bleu_petite_ligne.png');"
+    class="background"
+    style="width: 100%;height: 100%;background-image: url('src/img/motifs/bleu_petite_ligne.png');"
   >
     <div class="flex-container-col">
       <div class="intro-header">
-        <h1>Toilet Paper Game</h1>
+        <h1 class="">Toilet Paper Game</h1>
       </div>
-      <div class="intro-main half flex-container-col">
-        <div id="btnGoToCreateRoom" class="">
+      <div class="border-only-main half flex-container-col">
+        <div class="">
           <div class="flex-item-line">
-            <button @click="redirectToRoomCreationPage">CREATE ROOM</button>
+            <br />
+            <div class="border-pink">
+              <h2>Waiting for everyone ...</h2>
+            </div>
+            <br />
+            <div class="flex-container-row">
+              <ul id="lobbyPlayersList" class="flex-container-row"></ul>
+            </div>
+            <button id="btnStartGame" class="btn-start">START GAME</button
+            ><br />
+
+            <h3 class="border-pink" style="color: white;">
+              <span style="font-size:1rem; color:black"
+                >Share this link to your friend :</span
+              ><br />
+              <span class="game-link"
+                >toiletpapergame.herokuapp.com/<span id="lobbyRoomName"></span
+              ></span>
+              <br /><button class="btn-copy-link">COPY LINK</button>
+            </h3>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="intro-footer">
-        <h3>
-          "May the toilet paper be with you" <br />
-          Yodass.
-        </h3>
-      </div>
+    <!-- <p id="lobbyCurrentUser"></p>
+    <p id="lobbyAmountTotalPlayers"></p>
+    <p id="lobbyAmountConnectedPlayers"></p> -->
+
+    <div class="intro-footer">
+      <h3><u> quit </u></h3>
     </div>
   </div>
 </template>
 
 <script>
+import ClientUserAppSocketCommunication from "../mixins/ClientUserAppSocketCommunication";
 export default {
-  name: "Home",
-  methods: {
-    redirectToRoomCreationPage() {
-      this.$router.push({ name: "CreateRoom" });
-    }
-  }
+  name: "Lobby",
+  mixins: [ClientUserAppSocketCommunication]
 };
 </script>
 <style lang="css">

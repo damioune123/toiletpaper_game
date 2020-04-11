@@ -1,6 +1,6 @@
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
-export const ClientUserAppSocketCommunication = {
+export default {
   computed: {
     ...mapGetters({
       clientSocket: "clientSocket",
@@ -11,6 +11,9 @@ export const ClientUserAppSocketCommunication = {
     })
   },
   methods: {
+    ...mapActions({
+      initClientSocket: "initClientSocket"
+    }),
     /**
      * Broadcast data to player
      */

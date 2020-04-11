@@ -3,7 +3,7 @@ import Vue from "vue";
 import VueSocketIO from "vue-socket.io";
 import io from "socket.io-client";
 import store from "../../index";
-const APP_NAME = "Game server app";
+const MODULE_NAME = "Game server module";
 const SOCKET_ACTION_PREFIX = "GAME_SERVER_APP_SOCKET_";
 
 const DEFAULT_GAME_STATE = {
@@ -33,9 +33,9 @@ const mutations = {
 };
 const actions = {
   [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.CONNECTED]({ commit }) {
-    console.log(`${APP_NAME} - Successfully connected to the Websocket`);
+    console.log(`${MODULE_NAME} - Successfully connected to the Websocket`);
     console.log(
-      `${APP_NAME} - SOCKET ID`,
+      `${MODULE_NAME} - SOCKET ID`,
       state.socket.id,
       state.socket.connected
     );
@@ -82,6 +82,7 @@ const actions = {
     );
   },
   initGameServerSocket: context => {
+    console.log(`${MODULE_NAME} - Init game server socket`);
     const gameServerAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);
     context.commit("setSocket", gameServerAppSocketInstance);
     Vue.use(
@@ -97,20 +98,36 @@ const actions = {
   },
   disconnectGameServerSocket: context => {
     state.socket.disconnect();
-    console.log(`${APP_NAME} - Successfully disconnected from the Websocket`);
     console.log(
-      `${APP_NAME} - SOCKET ID`,
+      `${MODULE_NAME} - Successfully disconnected from the Websocket`
+    );
+    console.log(
+      `${MODULE_NAME} - SOCKET ID`,
       state.socket.id,
       state.socket.connected
     );
     context.commit("setConnected", false);
     context.commit("setSocket", null);
+  },
+  /**
+   * This will create a room in the backend and then in init the websocket if the room was successfully created
+   * @param roomData ({userName, roomName, language})
+   * @returns Either the room object or false if an error occurred
+   */
+  createRoom: async (context, roomData) => {
+    console.log(`${MODULE_NAME} - Creating new room`);
+    const { data } = await this.$rq.createRoom(roomData);
+    if (data) {
+      context.commit("setRoom", data, { root: true });
+      context.dispatch("initGameServerSocket");
+      await context.dispatch("fetchDictionary", { root: true });
+      return data;
+    }
+    return false;
   }
 };
 
-const getters = {
-  gameServerSocket: state => state.socket
-};
+
 
 const state = defaultState();
 export default {

@@ -1,36 +1,66 @@
 <template>
   <div
-    class="home"
-    style="width: 100%;height: 100%; background-image: url('src/assets/img/motifs/bleu_petite_ligne.png');"
+    class="background"
+    style="width: 100%;height: 100%;background-image: url('src/assets/img/motifs/bleu_petite_ligne.png');"
   >
     <div class="flex-container-col">
       <div class="intro-header">
         <h1>Toilet Paper Game</h1>
       </div>
-      <div class="intro-main half flex-container-col">
-        <div id="btnGoToCreateRoom" class="">
+
+      <div class="border-only-main half flex-container-col">
+        <div class="">
           <div class="flex-item-line">
-            <button @click="redirectToRoomCreationPage">CREATE ROOM</button>
+            <br />
+            <div class="border-pink">
+              <h2>CREATE GAME</h2>
+            </div>
+            <br />
+
+            <label for="userName"> Your name: </label>
+            <input id="userName" type="text" v-model="userName" />
+            <label for="roomName"> Room name: </label>
+            <input id="roomName" v-model="roomName" type="text" />
+            <button @click="onCreateRoomClick">CREATE ROOM</button>
+            <h3>
+              Share this link :
+              <h3 style="color: white;">
+                toiletpapergame.herokuapp.com/yourgamename
+              </h3>
+              <br />
+            </h3>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="intro-footer">
-        <h3>
-          "May the toilet paper be with you" <br />
-          Yodass.
-        </h3>
-      </div>
+    <div class="intro-footer">
+      <h3><u> back </u></h3>
     </div>
   </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex';
+import ClientUserAppSocketCommunication from "../mixins/ClientUserAppSocketCommunication";
 export default {
-  name: "Home",
+  name: "CreateRoom",
+  mixins: [ClientUserAppSocketCommunication],
+  data: function() {
+    return {
+      userName: "",
+      roomName: ""
+    };
+  },
   methods: {
-    redirectToRoomCreationPage() {
-      this.$router.push({ name: "CreateRoom" });
+    ...mapActions({
+       createRoom: 'createRoom'
+    }),
+    async onCreateRoomClick() {
+      await this.createRoom({
+        userName: this.userName,
+        roomName: this.roomName
+      });
     }
   }
 };
