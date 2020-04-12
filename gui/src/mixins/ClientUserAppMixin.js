@@ -12,7 +12,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      initClientSocket: "initClientSocket"
+      initClientSocket: "initClientSocket",
+      resetAppState: "resetAppState"
     }),
     /**
      * Broadcast data to player

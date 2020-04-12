@@ -7,35 +7,25 @@
       <div class="intro-header">
         <h1>Toilet Paper Game</h1>
       </div>
-
       <div class="border-only-main half flex-container-col">
         <div class="">
           <div class="flex-item-line">
             <br />
             <div class="border-pink">
-              <h2>CREATE GAME</h2>
+              <h2>JOIN GAME</h2>
             </div>
             <br />
-
             <label for="userName"> Your name: </label>
             <input id="userName" type="text" v-model="userName" />
             <label for="roomName"> Room name: </label>
             <input id="roomName" v-model="roomName" type="text" />
-            <button @click="onCreateRoomClick">CREATE ROOM</button>
-            <h3>
-              Share this link :
-              <h3 style="color: white;">
-                toiletpapergame.herokuapp.com/yourgamename
-              </h3>
-              <br />
-            </h3>
+            <button @click="onJoinRoomClick">JOIN ROOM</button>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="intro-footer">
-      <h3><u> back </u></h3>
+      <div class="intro-footer">
+        <h3><u> back </u></h3>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +34,7 @@
 import { mapActions } from "vuex";
 import ClientUserAppMixin from "../mixins/ClientUserAppMixin";
 export default {
-  name: "CreateRoom",
+  name: "JoinRoom",
   mixins: [ClientUserAppMixin],
   data: function() {
     return {
@@ -54,10 +44,10 @@ export default {
   },
   methods: {
     ...mapActions({
-      createRoom: "createRoom"
+      joinRoom: "joinRoom"
     }),
-    async onCreateRoomClick() {
-      await this.createRoom({
+    async onJoinRoomClick() {
+      await this.joinRoom({
         userName: this.userName,
         roomName: this.roomName
       });

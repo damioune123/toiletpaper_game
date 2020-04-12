@@ -29,8 +29,8 @@ const mutations = {
   setGameServerSocket(state, socket) {
     state.gameServerSocket = socket;
   },
-  setConnected(state, connected) {
-    state.connected = connected;
+  resetGameServerAppState(state) {
+    Object.assign(state, defaultState());
   }
 };
 const actions = {
@@ -41,7 +41,6 @@ const actions = {
       RECEIVED_EVENTS.CONNECTED,
       "Successfully connected to the Websocket"
     );
-    context.commit("setConnected", true);
     console.log(
       `${MODULE_NAME}- Successfully connected to the websocket, connecting to the game server to the created room ...`
     );
@@ -50,13 +49,41 @@ const actions = {
       isHost: true
     });
     console.log(
-      `${MODULE_NAME}- Connecting to the client app to the created room ...`
+      `${MODULE_NAME}- Connecting the client app to the created room ...`
     );
     context.getters.clientSocket.emit(SEND_EVENTS.JOIN_ROOM, {
       roomId: context.getters.roomId,
       playerId: context.getters.currentPlayer.userId,
       isHost: false
     });
+  },
+  /**
+   * A player left the room
+   * @param data {{player: object}}
+   */
+  [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.DISCONNECTED_PLAYER](
+    context,
+    { leftPlayer }
+  ) {
+    showEventInfo(
+      MODULE_NAME,
+      RECEIVED_EVENTS.DISCONNECTED_PLAYER,
+      `A player has disconnected in the room : ${leftPlayer.userName}`
+    );
+  },
+  /**
+   * The backend server shuts down
+   */
+  [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.DISCONNECT]() {
+    showEventInfo(
+      MODULE_NAME,
+      RECEIVED_EVENTS.DISCONNECT,
+      "The server has disconnected"
+    );
+  },
+  resetGameServerAppState: context => {
+    context.dispatch("disconnectGameServerSocket");
+    context.commit("resetGameServerAppState");
   },
   /**
    * Broadcast data to player
@@ -100,31 +127,42 @@ const actions = {
   },
   initGameServerSocket: context => {
     console.log(`${MODULE_NAME} - Init game server socket`);
-    const gameServerAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);
-    context.commit("setGameServerSocket", gameServerAppSocketInstance);
-    Vue.use(
-      new VueSocketIO({
-        debug: true,
-        connection: gameServerAppSocketInstance,
-        vuex: {
-          store,
-          actionPrefix: GAME_SERVER_SOCKET_ACTION_PREFIX
-        }
-      })
-    );
+    if (!state.gameServerSocket) {
+      console.log(
+        "No game server socket found - Creating and connecting a new socket instance"
+      );
+      const gameServerAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);
+      context.commit("setGameServerSocket", gameServerAppSocketInstance);
+      Vue.use(
+        new VueSocketIO({
+          debug: true,
+          connection: gameServerAppSocketInstance,
+          vuex: {
+            store,
+            actionPrefix: GAME_SERVER_SOCKET_ACTION_PREFIX
+          }
+        })
+      );
+    } else if (!state.gameServerSocket.connected) {
+      console.log(
+        `A game server socket was found but has been disconnected, reconnecting... - Socket id : ${state.clientSocket.id}`
+      );
+      state.gameServerSocket.reconnect();
+    }
   },
   disconnectGameServerSocket: context => {
-    state.gameServerSocket.disconnect();
-    console.log(
-      `${MODULE_NAME} - Successfully disconnected from the Websocket`
-    );
-    console.log(
-      `${MODULE_NAME} - SOCKET ID`,
-      state.gameServerSocket.id,
-      state.gameServerSocket.connected
-    );
-    context.commit("setConnected", false);
-    context.commit("setGameServerSocket", null);
+    if (state.gameServerSocket) {
+      state.gameServerSocket.disconnect();
+      console.log(
+        `${MODULE_NAME} - Successfully disconnected from the Websocket`
+      );
+      console.log(
+        `${MODULE_NAME} - SOCKET ID`,
+        state.gameServerSocket.id,
+        state.gameServerSocket.connected
+      );
+      context.commit("setGameServerSocket", null);
+    }
   },
   /**
    * This will create a room in the backend and then in init the websocket if the room was successfully created
@@ -149,7 +187,14 @@ const actions = {
   }
 };
 
-const getters = {};
+const getters = {
+  isGameServerConnected: state => {
+    if (!state.gameServerSocket) {
+      return false;
+    }
+    return state.gameServerSocket.connected;
+  }
+};
 
 const state = defaultState();
 export default {

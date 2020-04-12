@@ -7,6 +7,9 @@ const defaultState = () => {
 const mutations = {
   setDictionary(state, dictionary) {
     state.dictionary = dictionary;
+  },
+  resetDictionaryState(state) {
+    Object.assign(state, defaultState());
   }
 };
 
@@ -19,6 +22,9 @@ const actions = {
     if (data) {
       context.commit("setDictionary", data);
     }
+  },
+  resetDictionaryState: context => {
+    context.commit("resetDictionaryState");
   }
 };
 

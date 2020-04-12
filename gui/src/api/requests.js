@@ -60,6 +60,9 @@ class AqAjaxRequests {
   createRoom = roomData => {
     return this.axiosRequest.post(`/rooms`, roomData);
   };
+  joinRoom = roomData => {
+    return this.axiosRequest.get(`/rooms/join`, { params: roomData });
+  };
   //Dictionary
   getDictionary = (language = "en") => {
     return this.axiosRequest.get(`/dictionaries`, { params: { language } });

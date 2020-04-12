@@ -20,6 +20,9 @@ const mutations = {
   },
   setCurrentPlayer(state, currentPlayer) {
     state.currentPlayer = currentPlayer;
+  },
+  resetRoomState(state) {
+    Object.assign(state, defaultState());
   }
 };
 
@@ -46,6 +49,9 @@ const actions = {
     );
     context.dispatch("setRoom", room);
   },
+  resetRoomState: context => {
+    context.commit("resetRoomState");
+  },
   setRoom: (context, room) => {
     console.log(`${MODULE_NAME} - Setting room`);
     context.commit("setRoom", room);
@@ -58,6 +64,16 @@ const actions = {
 
 const getters = {
   room: state => state.room,
+  playersAsMapByUserId: state => state.room.roomState.players,
+  playersAsList: state => {
+    return Object.keys(state.room.roomState.players).reduce(
+      (players, playerKey) => {
+        players.push(state.room.roomState.players[playerKey]);
+        return players;
+      },
+      []
+    );
+  },
   roomName: state => state.room.roomName,
   language: state => state.room.roomLanguage,
   gameServerSocketId: state => state.room.gameServerSocketId,
