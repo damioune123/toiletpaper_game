@@ -29,14 +29,8 @@
 </template>
 
 <script>
-import ClientUserAppMixin from "../mixins/ClientUserAppMixin";
 export default {
   name: "Home",
-  mixins: [ClientUserAppMixin],
-  created() {
-    this.resetAppState();
-    this.initClientSocket();
-  },
   methods: {
     onRedirectToCreateRoom() {
       this.$router.push({ name: "CreateRoom" });

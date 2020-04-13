@@ -27,7 +27,7 @@ exports.add = async (req, res, next) => {
     const currentPlayerId = uuid.generate();
     const currentPlayer = {
         userId: currentPlayerId,
-        socketId: null,
+        socketUUID: null,
         userName: value.userName,
         isConnected: false,
         isHost: true,
@@ -37,7 +37,7 @@ exports.add = async (req, res, next) => {
         roomId,
         roomName: value.roomName,
         roomLanguage: value.language,
-        gameServerSocketId: null,
+        gameServerSocketUUID: null,
         roomState: {
             gameStatus: 'waiting', // can be waiting, running, paused
             players:{}
@@ -73,7 +73,7 @@ exports.join = async (req, res, next) => {
     }
     const currentPlayer = {
         userId: uuid.generate(),
-        socketId: null,
+        socketUUID: null,
         userName: value.userName,
         isConnected: false,
         isHost: false,

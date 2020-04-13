@@ -2,10 +2,13 @@ import { RECEIVED_EVENTS, SEND_EVENTS } from "../../../enums/event-types";
 import { GAME_SERVER_SOCKET_ACTION_PREFIX } from "../../../enums/socket/socket-action-prefix";
 import Vue from "vue";
 import VueSocketIO from "vue-socket.io";
-import io from "socket.io-client";
 import store from "../../index";
 import { showEventInfo } from "../utils";
-
+import {
+  getGameServerSocketInstance,
+  getClientSocketInstance
+} from "../../../socket/socket-instances";
+const VueLocalStorage = window.localStorage;
 const MODULE_NAME = "Game server module";
 const SOCKET_ACTION_PREFIX = GAME_SERVER_SOCKET_ACTION_PREFIX;
 
@@ -19,16 +22,14 @@ const DEFAULT_GAME_STATE = {
   caddy: {}
 };
 
+let gameServerSocket;
+
 const defaultState = () => {
   return {
-    gameServerState: DEFAULT_GAME_STATE,
-    gameServerSocket: null
+    gameServerState: DEFAULT_GAME_STATE
   };
 };
 const mutations = {
-  setGameServerSocket(state, socket) {
-    state.gameServerSocket = socket;
-  },
   resetGameServerAppState(state) {
     Object.assign(state, defaultState());
   }
@@ -44,14 +45,14 @@ const actions = {
     console.log(
       `${MODULE_NAME}- Successfully connected to the websocket, connecting to the game server to the created room ...`
     );
-    state.gameServerSocket.emit(SEND_EVENTS.JOIN_ROOM, {
+    gameServerSocket.emit(SEND_EVENTS.JOIN_ROOM, {
       roomId: context.getters.roomId,
       isHost: true
     });
     console.log(
       `${MODULE_NAME}- Connecting the client app to the created room ...`
     );
-    context.getters.clientSocket.emit(SEND_EVENTS.JOIN_ROOM, {
+    getClientSocketInstance().emit(SEND_EVENTS.JOIN_ROOM, {
       roomId: context.getters.roomId,
       playerId: context.getters.currentPlayer.userId,
       isHost: false
@@ -89,14 +90,14 @@ const actions = {
    * Broadcast data to player
    */
   broadcastToPlayers: (context, { eventType, data = {} }) => {
-    state.gameServerSocket.emit(
+    gameServerSocket.emit(
       SEND_EVENTS.GAME_COMMUNICATION,
       Object.assign(
         data,
         {
           meta: {
             sendType: "broadcast",
-            from: state.gameServerSocketId,
+            from: VueLocalStorage.getItem("gameServerSocketUUID"),
             eventType
           }
         },
@@ -108,16 +109,16 @@ const actions = {
    * Send message to a particular player with its player id
    */
   sendMessageToPlayer: (context, { eventType, playerId, data = {} }) => {
-    const socketId = context.getters.players[playerId].socketId;
-    state.gameServerSocket.emit(
+    const socketUUID = context.getters.players[playerId].socketUUID;
+    gameServerSocket.emit(
       SEND_EVENTS.GAME_COMMUNICATION,
       Object.assign(
         data,
         {
           meta: {
             sendType: "single",
-            to: socketId,
-            from: state.gameServerSocketId,
+            to: socketUUID,
+            from: VueLocalStorage.getItem("gameServerSocketUUID"),
             eventType
           }
         },
@@ -125,43 +126,30 @@ const actions = {
       )
     );
   },
-  initGameServerSocket: context => {
+  initGameServerSocket: () => {
     console.log(`${MODULE_NAME} - Init game server socket`);
-    if (!state.gameServerSocket) {
-      console.log(
-        "No game server socket found - Creating and connecting a new socket instance"
-      );
-      const gameServerAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);
-      context.commit("setGameServerSocket", gameServerAppSocketInstance);
-      Vue.use(
-        new VueSocketIO({
-          debug: true,
-          connection: gameServerAppSocketInstance,
-          vuex: {
-            store,
-            actionPrefix: GAME_SERVER_SOCKET_ACTION_PREFIX
-          }
-        })
-      );
-    } else if (!state.gameServerSocket.connected) {
-      console.log(
-        `A game server socket was found but has been disconnected, reconnecting... - Socket id : ${state.clientSocket.id}`
-      );
-      state.gameServerSocket.reconnect();
-    }
+    console.log(
+      "No game server socket found - Creating and connecting a new socket instance"
+    );
+    gameServerSocket = getGameServerSocketInstance();
+    Vue.use(
+      new VueSocketIO({
+        debug: true,
+        connection: gameServerSocket,
+        vuex: {
+          store,
+          actionPrefix: GAME_SERVER_SOCKET_ACTION_PREFIX
+        }
+      })
+    );
   },
-  disconnectGameServerSocket: context => {
-    if (state.gameServerSocket) {
-      state.gameServerSocket.disconnect();
+  disconnectGameServerSocket: () => {
+    if (gameServerSocket) {
+      gameServerSocket.disconnect();
       console.log(
         `${MODULE_NAME} - Successfully disconnected from the Websocket`
       );
-      console.log(
-        `${MODULE_NAME} - SOCKET ID`,
-        state.gameServerSocket.id,
-        state.gameServerSocket.connected
-      );
-      context.commit("setGameServerSocket", null);
+      gameServerSocket = null;
     }
   },
   /**
@@ -187,14 +175,7 @@ const actions = {
   }
 };
 
-const getters = {
-  isGameServerConnected: state => {
-    if (!state.gameServerSocket) {
-      return false;
-    }
-    return state.gameServerSocket.connected;
-  }
-};
+const getters = {};
 
 const state = defaultState();
 export default {

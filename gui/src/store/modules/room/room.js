@@ -76,14 +76,14 @@ const getters = {
   },
   roomName: state => state.room.roomName,
   language: state => state.room.roomLanguage,
-  gameServerSocketId: state => state.room.gameServerSocketId,
+  gameServerSocketUUID: state => state.room.gameServerSocketUUID,
   roomId: state => state.room.roomId,
   currentPlayer: state => state.currentPlayer,
   isReadyForGame: context => {
     return (
       context.state.room &&
       context.state.currentPlayer &&
-      context.getters.gameServerSocketId &&
+      context.getters.gameServerSocketUUID &&
       context.getters.dictionary
     );
   }

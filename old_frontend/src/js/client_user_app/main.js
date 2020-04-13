@@ -49,7 +49,7 @@ $(() => {
          * Send message to host
          */
         sendMessageToHost: (eventType, data = {}) => {
-            IO.socket.emit('game-communication', Object.assign(data, { meta: { sendType: 'single', to: App.room.gameServerSocketId, from: App.currentPlayer.socketId, eventType } }));
+            IO.socket.emit('game-communication', Object.assign(data, { meta: { sendType: 'single', to: App.room.gameServerSocketUUID, from: App.currentPlayer.socketId, eventType } }));
         },
         /**
          * Send message to a particular player with its player id

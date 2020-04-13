@@ -4,22 +4,20 @@ import router from "@/router";
 import { showEventInfo } from "../utils";
 import Vue from "vue";
 import VueSocketIO from "vue-socket.io";
-import io from "socket.io-client";
 import store from "../../index";
+import { getClientSocketInstance } from "../../../socket/socket-instances";
 
 const SOCKET_ACTION_PREFIX = CLIENT_SOCKET_ACTION_PREFIX;
-
 const MODULE_NAME = "Client user module";
+
+let clientSocket;
+
 const defaultState = () => {
   return {
-    clientHasJoinedRoom: false,
-    clientSocket: null
+    clientHasJoinedRoom: false
   };
 };
 const mutations = {
-  setClientSocket(state, socket) {
-    state.clientSocket = socket;
-  },
   setClientHasJoinedRoom(state, clientHasJoinedRoom) {
     state.clientHasJoinedRoom = clientHasJoinedRoom;
   },
@@ -88,14 +86,28 @@ const actions = {
   /**
    * The game server left the game
    */
-  [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.DISCONNECTED_HOST](context) {
+  [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.DISCONNECTED_HOST]() {
     showEventInfo(
       MODULE_NAME,
       RECEIVED_EVENTS.DISCONNECTED_HOST,
       "The host has left the game, you have been redirected"
     );
-    context.dispatch("resetAppState");
+    //context.dispatch("resetAppState");
     alert("The host has left the game, you have been redirected");
+  },
+  /**
+   * The server ask us to restore the app state
+   */
+  [SOCKET_ACTION_PREFIX + RECEIVED_EVENTS.RESTORE_STATE](context, {room, player, gameState}) {
+    showEventInfo(
+        MODULE_NAME,
+        RECEIVED_EVENTS.RESTORE_STATE,
+        "Restoring state"
+    );
+    context.dispatch('fetchDictionary');
+    context.dispatch('setRoom', room);
+    context.dispatch('setCurrentPlayer', player);
+    console.log('gameState', gameState);
   },
   /**
    * An error has occurred.
@@ -109,37 +121,29 @@ const actions = {
     );
     alert(data.message);
   },
-  initClientSocket: context => {
-    if (!state.clientSocket) {
-      console.log(
-        "No client socket found - Creating and connecting a new socket instance"
-      );
-      const clientAppSocketInstance = io(process.env.VUE_APP_SOCKET_URL);
-      context.commit("setClientSocket", clientAppSocketInstance);
-      Vue.use(
-        new VueSocketIO({
-          debug: true,
-          connection: clientAppSocketInstance,
-          vuex: {
-            store,
-            actionPrefix: CLIENT_SOCKET_ACTION_PREFIX
-          }
-        })
-      );
-    } else if (!state.clientSocket.connected) {
-      console.log(
-        `A game server socket was found but has been disconnected, reconnecting... - Socket id : ${state.clientSocket.id}`
-      );
-      state.clientSocket.reconnect();
-    }
+  initClientSocket: () => {
+    console.log(
+      "No client socket found - Creating and connecting a new socket instance"
+    );
+    clientSocket = getClientSocketInstance();
+    Vue.use(
+      new VueSocketIO({
+        debug: true,
+        connection: clientSocket,
+        vuex: {
+          store,
+          actionPrefix: CLIENT_SOCKET_ACTION_PREFIX
+        }
+      })
+    );
   },
-  disconnectClientSocket: context => {
-    if(state.clientSocket){
-      state.clientSocket.disconnect();
+  disconnectClientSocket: () => {
+    if (clientSocket) {
+      clientSocket.disconnect();
       console.log(
-          `${MODULE_NAME} - Successfully disconnected from the Websocket`
+        `${MODULE_NAME} - Successfully disconnected from the Websocket`
       );
-      context.commit("setClientSocket", null);
+      clientSocket = null;
     }
   },
   resetClientUserAppState: context => {
@@ -165,7 +169,7 @@ const actions = {
       console.log(
         `${MODULE_NAME}- Connecting the client app to the joined room ...`
       );
-      state.clientSocket.emit(SEND_EVENTS.JOIN_ROOM, {
+      clientSocket.emit(SEND_EVENTS.JOIN_ROOM, {
         roomId: context.getters.roomId,
         playerId: context.getters.currentPlayer.userId,
         isHost: false
@@ -176,15 +180,7 @@ const actions = {
   }
 };
 
-const getters = {
-  clientSocket: state => state.clientSocket,
-  isClientConnected: state => {
-    if (!state.clientSocket) {
-      return false;
-    }
-    return state.clientSocket.connected;
-  }
-};
+const getters = {};
 const state = defaultState();
 export default {
   state,

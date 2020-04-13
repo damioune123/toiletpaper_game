@@ -1,13 +1,18 @@
 import { mapGetters, mapActions } from "vuex";
+import { getClientSocketInstance } from "../socket/socket-instances";
 
 export default {
+  data () {
+    return {
+      clientSocket: getClientSocketInstance()
+    }
+  },
   computed: {
     ...mapGetters({
-      clientSocket: "clientSocket",
       connected: "connected",
       players: "players",
       currentPlayer: "currentPlayer",
-      gameServerSocketId: "gameServerSocketId"
+      gameServerSocketUUID: "gameServerSocketUUID"
     })
   },
   methods: {
@@ -24,7 +29,7 @@ export default {
         Object.assign(data, {
           meta: {
             sendType: "broadcast",
-            from: this.currentPlayer.socketId,
+            from: this.currentPlayer.socketUUID,
             eventType
           }
         })
@@ -39,8 +44,8 @@ export default {
         Object.assign(data, {
           meta: {
             sendType: "single",
-            to: this.gameServerSocketId,
-            from: this.currentPlayer.socketId,
+            to: this.gameServerSocketUUID,
+            from: this.currentPlayer.socketUUID,
             eventType
           }
         })
@@ -50,14 +55,14 @@ export default {
      * Send message to a particular player with its player id
      */
     sendMessageToPlayer: (eventType, playerId, data = {}) => {
-      const socketId = this.players[playerId].socketId;
+      const socketUUID = this.players[playerId].socketUUID;
       this.clientSocket.emit(
         "game-communication",
         Object.assign(data, {
           meta: {
             sendType: "single",
-            to: socketId,
-            from: this.currentPlayer.socketId,
+            to: socketUUID,
+            from: this.currentPlayer.socketUUID,
             eventType
           }
         })

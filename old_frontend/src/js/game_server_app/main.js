@@ -55,14 +55,14 @@ const IO = {
    * Broadcast data to palyer
    */
   broadcastToPlayers : (eventType, data = {}) => {
-    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'broadcast', from: App.room.gameServerSocketId, eventType }}, {gameState: App.gameState}));
+    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'broadcast', from: App.room.gameServerSocketUUID, eventType }}, {gameState: App.gameState}));
   },
   /**
    * Send message to a particular player with its player id
    */
   sendMessageToPlayer : (eventType, playerId, data = {}) => {
     const socketId = App.room.roomState.players[playerId].socketId;
-    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'single', to: socketId, from: App.room.gameServerSocketId, eventType}},{gameState: App.gameState}));
+    IO.socket.emit('game-communication', Object.assign(data, { meta: {sendType: 'single', to: socketId, from: App.room.gameServerSocketUUID, eventType}},{gameState: App.gameState}));
   },
 
   /**

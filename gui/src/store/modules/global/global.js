@@ -10,10 +10,10 @@ const actions = {
     dispatch("resetClientUserAppState");
     dispatch("resetDictionaryState");
     dispatch("resetRoomState");
-    if (redirectToHomePage) {
+    if (redirectToHomePage && router.currentRoute.name !== "Home") {
       router.push({ name: "Home" });
     }
-  }
+  },
 };
 
 const getters = {};
